@@ -1,0 +1,7 @@
+SQLAlchemy==1.4.19
+Pyrogram==1.2.9
+Pillow==8.1.0
+python-dotenv==0.15.0
+psycopg2==2.8.6
+TgCrypto==1.2.2
+pylast==4.2.1
