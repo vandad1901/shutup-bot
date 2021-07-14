@@ -9,10 +9,10 @@ will unpin the message that it was replied to or if it wasn't a reply to a messa
 """
 from pyrogram import filters
 
-from ..shutup import app, isModuleToggledFilter
+from ..shutup import app, bot_username, isModuleToggledFilter
 
 
-@app.on_message(filters.command(["pin", "pin@damnshutup_bot"]) & filters.group & isModuleToggledFilter("pin"))
+@app.on_message(filters.command(["pin", f"pin@{bot_username}"]) & filters.group & isModuleToggledFilter("pin"))
 def pin(client, message):
     if(message.chat.get_member("self").can_pin_messages):
         if(message.reply_to_message):
@@ -28,7 +28,7 @@ def pin(client, message):
         message.reply_text("I don't have permission to pin messages here")
 
 
-@app.on_message(filters.command(["unpin", "unpin@damnshutup_bot"]) & filters.group & isModuleToggledFilter("pin"))
+@app.on_message(filters.command(["unpin", f"unpin@{bot_username}"]) & filters.group & isModuleToggledFilter("pin"))
 def unpin(client, message):
     if(message.chat.get_member("self").can_pin_messages):
         if(message.reply_to_message):

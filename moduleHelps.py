@@ -26,7 +26,7 @@ shutupDocsButtons = common.makeButtons(
     shutupDocsButtons, list(repeat(3, len(shutupDocsButtons)//3+1))) + [[types.InlineKeyboardButton("See userbot docs", f"CHDOC:UB")]]
 
 
-@SU.app.on_message(filters.command(["help", "help@damnshutup_bot"]))
+@SU.app.on_message(filters.command(["help", f"help@{common.bot_username}"]))
 async def help(client, message):
     await message.reply_text(
         "**Shutup** modules\n\nChoose the module you want help with and or want to enable/disable", reply_markup=types.InlineKeyboardMarkup(shutupDocsButtons))

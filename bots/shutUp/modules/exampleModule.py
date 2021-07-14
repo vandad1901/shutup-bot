@@ -8,11 +8,11 @@ explanations
 from pyrogram import filters  # Import any pyrogram stuff here
 
 # Import things you need here like owner_id and such
-from ..shutup import DB, app
+from ..shutup import DB, app, bot_username
 
 
-# Not every command needs the stuff@damnshutup_bot variant. Use your own judgement
-@app.on_message(filters.command(["Stuff", "stuff@damnshutup_bot"]))
+# Not every command needs the f"stuff@{bot_username}" variant. Use your own judgement
+@app.on_message(filters.command(["Stuff", f"stuff@{bot_username}"]))
 # Name the arguments "Client" and "message"
 async def exampleCommandFunc(client, message):
     pass

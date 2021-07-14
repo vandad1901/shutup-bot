@@ -6,11 +6,13 @@ Usage:
 """
 
 import time
+
 from pyrogram import filters
-from ..shutup import app, isModuleToggledFilter
+
+from ..shutup import app, bot_username, isModuleToggledFilter
 
 
-@app.on_message(filters.command(["ping", "ping@damnshutup_bot"]) & isModuleToggledFilter("ping"))
+@app.on_message(filters.command(["ping", f"ping@{bot_username}"]) & isModuleToggledFilter("ping"))
 async def ping(client, message):
     start_time = time.time()
     mymsg = await message.reply_text("Pinging...")

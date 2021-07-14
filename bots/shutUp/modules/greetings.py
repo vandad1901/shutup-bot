@@ -10,7 +10,7 @@ Same as /setwelcome but for the farewell message
 """
 from pyrogram import filters
 
-from ..shutup import DB, app, isModuleToggledFilter, owner_id
+from ..shutup import DB, app, bot_username, isModuleToggledFilter, owner_id
 
 
 @app.on_message(filters.new_chat_members & isModuleToggledFilter("greetings"))
@@ -39,7 +39,7 @@ async def welcome(client, message):
         await byeMessage.copy(message.chat.id, reply_to_message_id=message.message_id)
 
 
-@app.on_message(filters.command(["setwelcome", "setwelcome@damnshutup_bot"]) & filters.group & isModuleToggledFilter("greetings"))
+@app.on_message(filters.command(["setwelcome", f"setwelcome@{bot_username}"]) & filters.group & isModuleToggledFilter("greetings"))
 async def setWelcome(client, message):
     if(message.reply_to_message):
         DB.groups.setWelcome(message.chat.id, message.reply_to_message)
@@ -50,7 +50,7 @@ async def setWelcome(client, message):
         await message.reply_text(f"Successfully set the welcome message to: {' '.join(message.command[1:])}")
 
 
-@app.on_message(filters.command(["setbye", "setbye@damnshutup_bot"]) & filters.group & isModuleToggledFilter("greetings"))
+@app.on_message(filters.command(["setbye", f"setbye@{bot_username}"]) & filters.group & isModuleToggledFilter("greetings"))
 async def setBye(client, message):
     if(message.reply_to_message):
         DB.groups.setBye(message.chat.id, message.reply_to_message)

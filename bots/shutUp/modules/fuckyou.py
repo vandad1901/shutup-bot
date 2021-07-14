@@ -7,10 +7,10 @@ Usage:
 from common import isModuleToggledFilter
 from pyrogram import filters
 
-from ..shutup import DB, app
+from ..shutup import DB, app, bot_username
 
 
-@app.on_message(filters.command(["fuckyou", "fuckyou@damnshutup_bot"]) & isModuleToggledFilter("fuckyou"))
+@app.on_message(filters.command(["fuckyou", f"fuckyou@{bot_username}"]) & isModuleToggledFilter("fuckyou"))
 async def fuckYou(client, message):
     try:
         anId = DB.animations.get()[-1].animationid
