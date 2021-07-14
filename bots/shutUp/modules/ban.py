@@ -21,46 +21,46 @@ timePeriods = dict(zip(['s', 'm', 'h', 'd', 'w', 'M', 'y'], [('second', 1), ('mi
 
 
 @app.on_message(filters.command(["kick", "kick@damnshutup_bot"]))
-def kick(client, message):
-    if(not message.chat.get_member("self").can_restrict_members):
-        message.reply_text("I need additional permissions to restrict users")
+async def kick(client, message):
+    if(not (await message.chat.get_member("self")).can_restrict_members):
+        await message.reply_text("I need additional permissions to restrict users")
         return
     if(message.reply_to_message):
         effectiveId = message.reply_to_message.from_user.id
     elif(len(message.command) > 1):
         effectiveId = message.command[1]
     else:
-        message.reply_text(
+        await message.reply_text(
             "No user specified. Reply to the user or have their id as the argument")
         return
-    if(message.chat.get_member(message.from_user.id).can_restrict_members or message.from_user.id == owner_id):
+    if((await message.chat.get_member(message.from_user.id)).can_restrict_members or message.from_user.id == owner_id):
         try:
-            message.chat.kick_member(effectiveId)
+            await message.chat.kick_member(effectiveId)
         except errors.exceptions.bad_request_400.UserAdminInvalid:
-            message.reply_text("This user is an admin")
+            await message.reply_text("This user is an admin")
             return
-        message.chat.unban_member(effectiveId)
-        message.reply_text(
+        await message.chat.unban_member(effectiveId)
+        await message.reply_text(
             f"Kicked {getFullName(app.get_users(effectiveId))}")
     else:
-        message.reply_text(
+        await message.reply_text(
             "You must have user restricting permissions to use this command")
 
 
 @app.on_message(filters.command(["ban", "ban@damnshutup_bot"]))
-def ban(client, message):
-    if(not message.chat.get_member("self").can_restrict_members):
-        message.reply_text("I need additional permissions to restrict users")
+async def ban(client, message):
+    if(not (await message.chat.get_member("self")).can_restrict_members):
+        await message.reply_text("I need additional permissions to restrict users")
         return
     if(message.reply_to_message):
         effectiveId = message.reply_to_message.from_user.id
     elif(len(message.command) > 1):
         effectiveId = message.command[1]
     else:
-        message.reply_text(
+        await message.reply_text(
             "No user specified. Reply to the user or have their id as the argument")
         return
-    if(message.chat.get_member(message.from_user.id).can_restrict_members or message.from_user.id == owner_id):
+    if((await message.chat.get_member(message.from_user.id)).can_restrict_members or message.from_user.id == owner_id):
         try:
             lastArgument = message.command[-1]
             if(lastArgument[-1] in timePeriods and lastArgument[:-1].isnumeric()):
@@ -74,33 +74,33 @@ def ban(client, message):
                 amount = 0
                 msg = f"Banned {getFullName(app.get_users(effectiveId))} forever"
             untilTime = amount + int(time.time())
-            message.chat.kick_member(effectiveId, untilTime)
+            await message.chat.kick_member(effectiveId, untilTime)
         except errors.exceptions.bad_request_400.UserAdminInvalid:
-            message.reply_text("This user is an admin")
+            await message.reply_text("This user is an admin")
             return
-        message.reply_text(msg)
+        await message.reply_text(msg)
     else:
-        message.reply_text(
+        await message.reply_text(
             "You must have user restricting permissions to use this command")
 
 
 @app.on_message(filters.command(["unban", "unban@damnshutup_bot"]))
-def unban(client, message):
-    if(not message.chat.get_member("self").can_restrict_members):
-        message.reply_text("I need additional permissions to restrict users")
+async def unban(client, message):
+    if(not (await message.chat.get_member("self")).can_restrict_members):
+        await message.reply_text("I need additional permissions to restrict users")
         return
     if(message.reply_to_message):
         effectiveId = message.reply_to_message.from_user.id
     elif(len(message.command) > 1):
         effectiveId = message.command[1]
     else:
-        message.reply_text(
+        await message.reply_text(
             "No user specified. Reply to the user or have their id as the argument")
         return
-    if(message.chat.get_member(message.from_user.id).can_restrict_members or message.from_user.id == owner_id):
-        message.chat.unban_member(effectiveId)
-        message.reply_text(
+    if((await message.chat.get_member(message.from_user.id)).can_restrict_members or message.from_user.id == owner_id):
+        await message.chat.unban_member(effectiveId)
+        await message.reply_text(
             f"Unbanned {getFullName(app.get_users(effectiveId))}")
     else:
-        message.reply_text(
+        await message.reply_text(
             "You must have user restricting permissions to use this command")
