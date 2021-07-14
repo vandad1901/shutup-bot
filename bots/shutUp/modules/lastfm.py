@@ -14,8 +14,8 @@ import itertools
 import pylast
 from pyrogram import emoji, filters
 
-from ..shutup import (DB, app, getFullName, lastfm_key, lastfm_pass,
-                      lastfm_secret, lastfm_user)
+from ..shutup import (DB, app, bot_username, getFullName, lastfm_key,
+                      lastfm_pass, lastfm_secret, lastfm_user)
 
 network = pylast.LastFMNetwork(
     api_key=lastfm_key,
@@ -27,7 +27,7 @@ timePeriods = {"overall": pylast.PERIOD_OVERALL, "week": pylast.PERIOD_7DAYS, "m
                "3month": pylast.PERIOD_3MONTHS, "6month": pylast.PERIOD_6MONTHS, "year": pylast.PERIOD_12MONTHS}
 
 
-@app.on_message(filters.command(["lastfm", "lastfm@damnshutup_bot"]))
+@app.on_message(filters.command(["lastfm", f"lastfm@{bot_username}"]))
 async def getLastFMScrobbles(client, message):
     lastFMName = DB.users.get(str(message.from_user.id)).lastfm
     if(not lastFMName):
@@ -49,7 +49,7 @@ async def getLastFMScrobbles(client, message):
             await message.reply_text(f"{getFullName(message.from_user)} has never scrobbled any songs")
 
 
-@app.on_message(filters.command(["lastfm_top", "lastfm_top@damnshutup_bot"]))
+@app.on_message(filters.command(["lastfm_top", f"lastfm_top@{bot_username}"]))
 async def getLastFMTops(client, message):
     lastFMName = DB.users.get(str(message.from_user.id)).lastfm
     if(not lastFMName):
@@ -96,7 +96,7 @@ async def getLastFMTops(client, message):
         await message.reply_text(f"Something went wrong. Is **{lastFMName}** your username?")
 
 
-@app.on_message(filters.command(["setlastfm", "setlastfm@damnshutup_bot"]))
+@app.on_message(filters.command(["setlastfm", f"setlastfm@{bot_username}"]))
 async def setLastFMName(client, message):
     if(len(message.command) == 2):
         DB.users.setLastfm(str(message.from_user.id), message.command[1])

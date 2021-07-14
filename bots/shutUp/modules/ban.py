@@ -14,13 +14,13 @@ import time
 
 from pyrogram import errors, filters
 
-from ..shutup import app, getFullName, owner_id
+from ..shutup import app, bot_username, getFullName, owner_id
 
 timePeriods = dict(zip(['s', 'm', 'h', 'd', 'w', 'M', 'y'], [('second', 1), ('minute', 60), (
     "hour", 3600), ("day", 86400), ("week", 86400*7), ("month", 86400*30), ("year", 86400*365)]))
 
 
-@app.on_message(filters.command(["kick", "kick@damnshutup_bot"]))
+@app.on_message(filters.command(["kick", f"kick@{bot_username}"]))
 async def kick(client, message):
     if(not (await message.chat.get_member("self")).can_restrict_members):
         await message.reply_text("I need additional permissions to restrict users")
@@ -47,7 +47,7 @@ async def kick(client, message):
             "You must have user restricting permissions to use this command")
 
 
-@app.on_message(filters.command(["ban", "ban@damnshutup_bot"]))
+@app.on_message(filters.command(["ban", f"ban@{bot_username}"]))
 async def ban(client, message):
     if(not (await message.chat.get_member("self")).can_restrict_members):
         await message.reply_text("I need additional permissions to restrict users")
@@ -84,7 +84,7 @@ async def ban(client, message):
             "You must have user restricting permissions to use this command")
 
 
-@app.on_message(filters.command(["unban", "unban@damnshutup_bot"]))
+@app.on_message(filters.command(["unban", f"unban@{bot_username}"]))
 async def unban(client, message):
     if(not (await message.chat.get_member("self")).can_restrict_members):
         await message.reply_text("I need additional permissions to restrict users")

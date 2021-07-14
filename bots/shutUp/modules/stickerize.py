@@ -9,10 +9,10 @@ import os
 from PIL import Image
 from pyrogram import filters
 
-from ..shutup import app, isModuleToggledFilter
+from ..shutup import app, bot_username, isModuleToggledFilter
 
 
-@app.on_message(filters.command(["stickerize", "stickerize@damnshutup_bot"]) & isModuleToggledFilter("stickerize"))
+@app.on_message(filters.command(["stickerize", f"stickerize@{bot_username}"]) & isModuleToggledFilter("stickerize"))
 async def stickerize(client, message):
     if(message.reply_to_message):
         imgpath = await message.reply_to_message.download()

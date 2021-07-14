@@ -6,10 +6,10 @@ Usage:
 """
 from pyrogram import filters
 
-from ..shutup import app, isModuleToggledFilter
+from ..shutup import app, bot_username, isModuleToggledFilter
 
 
-@app.on_message(filters.command(["say", "say@damnshutup_bot"]) & isModuleToggledFilter("say"))
+@app.on_message(filters.command(["say", f"say@{bot_username}"]) & isModuleToggledFilter("say"))
 async def say(client, message):
     try:
         await message.delete()

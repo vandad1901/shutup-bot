@@ -7,7 +7,7 @@ Toggles wether a certain user should be added back everytime they're removed fro
 """
 from pyrogram import filters
 
-from ..userbot import DB, app, isModuleToggledFilter, usr
+from ..userbot import DB, app, isModuleToggledFilter, usr, bot_username
 
 
 @usr.on_message(filters.left_chat_member & isModuleToggledFilter("addBack"))
@@ -17,7 +17,7 @@ async def addBack(client, message):
         print(f"Added {message.left_chat_member.first_name}")
 
 
-@app.on_message(filters.group & filters.command((["toggleaddback", "toggleaddback@damnshutup_bot"])) & isModuleToggledFilter("addBack"))
+@app.on_message(filters.group & filters.command((["toggleaddback", f"toggleaddback@{bot_username}"])) & isModuleToggledFilter("addBack"))
 async def addAddback(client, message):
     addbackGroup = message.chat.id
     if(message.reply_to_message):

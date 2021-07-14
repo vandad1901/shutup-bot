@@ -10,18 +10,18 @@ dotenv.load_dotenv()
 api_id = int(environ["API_ID"])
 api_hash = environ["API_HASH"]
 bot_token = environ["BOT_TOKEN"]
+bot_username = environ["BOT_USERNAME"]
 owner_id = int(environ["OWNER_ID"])
-api_id = int(environ["API_ID"])
-api_hash = environ["API_HASH"]
-aux_user = environ["USER_SESSION_STRING"]
+
+database_url = environ["DATABASE_URL"]
+database_url = urlparse(database_url)._replace(scheme="postgresql").geturl()
 
 lastfm_key = environ["LASTFM_KEY"]
 lastfm_secret = environ["LASTFM_SECRET"]
 lastfm_user = environ["LASTFM_USER"]
 lastfm_pass = environ["LASTFM_PASS"]
 
-database_url = environ["DATABASE_URL"]
-database_url = urlparse(database_url)._replace(scheme="postgresql").geturl()
+aux_user = environ["USER_SESSION_STRING"]
 
 
 def isModuleToggled(chatId, moduleName):

@@ -7,13 +7,13 @@ Usage:
 """
 from pyrogram import filters
 
-from ..shutup import DB, app, isModuleToggledFilter, owner_id
+from ..shutup import DB, app, bot_username, isModuleToggledFilter, owner_id
 
 isShut = filters.create(lambda _, __, query: bool(
     DB.groups.get(str(query.chat.id)).shut))
 
 
-@app.on_message(filters.command(["shut", "shut@damnshutup_bot"]) & filters.group & isModuleToggledFilter("shut"), group=0)
+@app.on_message(filters.command(["shut", f"shut@{bot_username}"]) & filters.group & isModuleToggledFilter("shut"), group=0)
 async def shut(client, message):
     if((await message.chat.get_member(message.from_user.id)).can_delete_messages or message.from_user.id == owner_id):
         DB.groups.toggleShut(str(message.chat.id))

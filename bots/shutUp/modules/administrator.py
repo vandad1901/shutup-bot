@@ -9,10 +9,10 @@ dumps some basic info
 """
 from pyrogram import filters
 
-from ..shutup import DB, app, owner_id
+from ..shutup import DB, app, bot_username, owner_id
 
 
-@app.on_message(filters.command(["setgifid", "setgifid@damnshutup_bot"]))
+@app.on_message(filters.command(["setgifid", f"setgifid@{bot_username}"]))
 async def setGifId(client, message):
     if(message.from_user.id == owner_id):
         try:
