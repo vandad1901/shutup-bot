@@ -6,3 +6,4 @@ psycopg2==2.8.6
 TgCrypto==1.2.2
 pylast==4.2.1
 anilistpy==0.0.5.2
+requests==2.25.1
