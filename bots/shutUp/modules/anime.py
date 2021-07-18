@@ -31,7 +31,7 @@ async def getCharacterSearch(client, message):
 async def getAnime(client, callback_query):
     args = callback_query.data.split(":")
     anime = Anime(args[1])
-    await callback_query.message.edit_media(types.InputMediaPhoto(anime.coverImage("extraLarge"), f"""
+    msg1 = f"""
 **Title:** {anime.title("romaji")}({anime.title("english")})
 **Genres:** {", ".join(anime.genres())}
 **Episodes:** {anime.episodes()}
@@ -39,12 +39,13 @@ async def getAnime(client, callback_query):
 **Status:** {anime.status()}
 **Ratings:** {anime.averageScore()}/100
 
-**Description:** {anime.description()}
 **Characters:** {", ".join([ch["node"]["name"]["full"] for ch in anime.media[0]["characters"]["edges"]])}
-
+**Description:**"""
+    msg2 = f"""
 **Studios:** {", ".join(anime.studios())}
 **Tags:** {" ".join(["#"+tag.replace(" ","_").replace("-","_") for tag in anime.tags()])}
-"""))
+"""
+    await callback_query.message.edit_media(types.InputMediaPhoto(anime.coverImage("extraLarge"), msg1 + anime.description()[:(1019-len(msg1)-len(msg2))]+"...\n"+msg2))
 
 
 @app.on_callback_query(filters.regex("CHR"))
