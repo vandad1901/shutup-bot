@@ -18,12 +18,12 @@ for i in SU.modules.allFiles:
 userBotDocsButtons = [types.InlineKeyboardButton(
     doc, f"HELP:UB:{doc}") for doc in userBotDocs]
 userBotDocsButtons = common.makeButtons(
-    userBotDocsButtons, list(repeat(3, len(userBotDocsButtons)//3+1))) + [[types.InlineKeyboardButton("See shutup docs", f"CHDOC:SU")]]
+    userBotDocsButtons, 3) + [[types.InlineKeyboardButton("See shutup docs", f"CHDOC:SU")]]
 
 shutupDocsButtons = [types.InlineKeyboardButton(
     doc, f"HELP:SU:{doc}") for doc in shutUpDocs]
 shutupDocsButtons = common.makeButtons(
-    shutupDocsButtons, list(repeat(3, len(shutupDocsButtons)//3+1))) + [[types.InlineKeyboardButton("See userbot docs", f"CHDOC:UB")]]
+    shutupDocsButtons, 3) + [[types.InlineKeyboardButton("See userbot docs", f"CHDOC:UB")]]
 
 
 @SU.app.on_message(filters.command(["help", f"help@{common.bot_username}"]))
