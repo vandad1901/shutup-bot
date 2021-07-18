@@ -13,14 +13,14 @@ from ..shutup import DB, app, bot_username
 
 # Not every command needs the f"stuff@{bot_username}" variant. Use your own judgement
 @app.on_message(filters.command(["Stuff", f"stuff@{bot_username}"]))
-# Name the arguments "Client" and "message"
+# Name the arguments "client" and "message"
 async def exampleCommandFunc(client, message):
     pass
 
 
 # All callback query data should be all capitalized every "argument" for the callback query should be seperated by ":". e.g STUFF:DELETE:SOMEGROUP
 @app.on_callback_query(filters.regex("^STUFF"))
-# Name the arguments "Client" and "callback_query"
+# Name the arguments "client" and "callback_query"
 async def exampleCallbackQueryFunc(client, callback_query):
     args = callback_query.data.split(":")
     pass
