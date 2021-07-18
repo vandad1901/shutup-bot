@@ -1,3 +1,4 @@
+from itertools import repeat
 from os import environ
 from urllib.parse import urljoin, urlparse
 
@@ -39,6 +40,8 @@ def isModuleToggledFilter(moduleName):
 
 
 def makeButtons(buttons, buttonTable):
+    if(isinstance(buttonTable, int)):
+        buttonTable = list(repeat(buttonTable, len(buttons)//buttonTable+1))
     buttons = iter(buttons)
     Table = []
     try:
