@@ -16,7 +16,7 @@ from ..shutup import app, bot_username
 
 @app.on_message(filters.command(["anime", f"anime@{bot_username}"]))
 async def getAnimeSearch(client, message):
-    if(len(message.command<2)):
+    if(len(message.command < 2)):
         await message.reply_text('Usage:\n/anime anime name')
         return
     query = " ".join(message.command[1:])
@@ -24,24 +24,24 @@ async def getAnimeSearch(client, message):
     await message.reply_photo("https://anilist.co/img/icons/android-chrome-512x512.png", "Select anime", reply_markup=types.InlineKeyboardMarkup(makeButtons([types.InlineKeyboardButton(anime["title"]["romaji"], f"ANI:{anime['id']}") for anime in result.media], 1)))
 
 
-@app.on_message(filters.command(["character", f"character@{bot_username}"]))
-async def getCharacterSearch(client, message):
-    if(len(message.command<2)):
-        await message.reply_text('Usage:\n/character character name')
-        return
-    query = " ".join(message.command[1:])
-    result = charSearch(query)
-    await message.reply_photo("https://anilist.co/img/icons/android-chrome-512x512.png", "Select character", reply_markup=types.InlineKeyboardMarkup(makeButtons([types.InlineKeyboardButton(character["name"]["full"], f"CHR:{character['id']}") for character in result.media], 1)))
-
-
 @app.on_message(filters.command(["manga", f"manga@{bot_username}"]))
 async def getMangaSearch(client, message):
-    if(len(message.command<2)):
+    if(len(message.command < 2)):
         await message.reply_text('Usage:\n/manga manga name')
         return
     query = " ".join(message.command[1:])
     result = mangaSearch(query)
     await message.reply_photo("https://anilist.co/img/icons/android-chrome-512x512.png", "Select manga", reply_markup=types.InlineKeyboardMarkup(makeButtons([types.InlineKeyboardButton(manga["title"]["romaji"], f"MANGA:{manga['id']}") for manga in result.media], 1)))
+
+
+@app.on_message(filters.command(["character", f"character@{bot_username}"]))
+async def getCharacterSearch(client, message):
+    if(len(message.command < 2)):
+        await message.reply_text('Usage:\n/character character name')
+        return
+    query = " ".join(message.command[1:])
+    result = charSearch(query)
+    await message.reply_photo("https://anilist.co/img/icons/android-chrome-512x512.png", "Select character", reply_markup=types.InlineKeyboardMarkup(makeButtons([types.InlineKeyboardButton(character["name"]["full"], f"CHR:{character['id']}") for character in result.media], 1)))
 
 
 @app.on_callback_query(filters.regex("ANI"))
