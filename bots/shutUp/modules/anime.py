@@ -9,7 +9,7 @@ Searches Anilist for a character
 from anilistpy import (Anime, Character, Manga, animeSearch, charSearch,
                        mangaSearch)
 from common import makeButtons
-from pyrogram import filters, types
+from pyrogram import emoji, filters, types
 
 from ..shutup import app, bot_username
 
@@ -51,9 +51,10 @@ async def getAnime(client, callback_query):
     msg1 = f"""
 **Title:** {anime.title("romaji")}{f"({anime.title('english')})" if anime.title("english") else ""}
 **Genres:** {", ".join(anime.genres())}
+**Start/End:** {anime.startDate()["day"] if anime.startDate()["day"] else "TBD"}/{anime.startDate()["month"]}/{anime.startDate()["year"]} - {f'{anime.endDate()["day"]}/{anime.endDate()["month"]}/{anime.endDate()["year"]}' if anime.endDate()["year"] else 'TBD'}
 **Episodes:** {anime.episodes()} ({anime.status().replace("_"," ").lower().capitalize()}){f'''
 **Duration:** {anime.duration()} minute{"s" if anime.duration()>1 else ""}''' if anime.duration() else ""}
-**Ratings:** {anime.averageScore()}/100
+**Rating:** {anime.averageScore()}/100
 
 **Characters:** {", ".join([ch["node"]["name"]["full"] for ch in anime.media[0]["characters"]["edges"]])}
 **Description:**"""
@@ -61,7 +62,7 @@ async def getAnime(client, callback_query):
 **Studios:** {", ".join(anime.studios())}
 **Tags:** {" ".join(["#"+tag.replace(" ","_").replace("-","_") for tag in anime.tags()])}
 """
-    await callback_query.message.edit_media(types.InputMediaPhoto(anime.coverImage("extraLarge"), (msg1 + anime.description()[:(1019-len(msg1)-len(msg2))]+"...\n"+msg2 if len(msg1+anime.description()+msg2) > 1024 else msg1+anime.description()+msg2)))
+    await callback_query.message.edit_media(types.InputMediaPhoto(anime.coverImage("extraLarge"), (msg1 + anime.description()[:(1019-len(msg1)-len(msg2))]+"...\n"+msg2 if len(msg1+anime.description()+msg2) > 1024 else msg1+anime.description()+msg2)), reply_markup=types.InlineKeyboardMarkup([[types.InlineKeyboardButton("On Anilist", url=f"https://anilist.co/anime/{anime.media[0]['id']}/"), types.InlineKeyboardButton(f"Trailer{emoji.CLAPPER_BOARD}", url=anime.trailerlink())]]))
 
 
 @app.on_callback_query(filters.regex("MANGA"))
@@ -71,17 +72,18 @@ async def getManga(client, callback_query):
     msg1 = f"""
 **Title:** {manga.title("romaji")}{f"({manga.title('english')})" if manga.title("english") else ""}
 **Genres:** {", ".join(manga.genres())}
+**Start/End:** {manga.startDate()["day"] if manga.startDate()["day"] else "TBD"}/{manga.startDate()["month"]}/{manga.startDate()["year"]} - {f'{manga.endDate()["day"]}/{manga.endDate()["month"]}/{manga.endDate()["year"]}' if manga.endDate()["year"] else 'TBD'}
 **Status:** {manga.status().replace("_"," ").lower().capitalize()}{f'''
 **Volumes:** {manga.volumes()}
 **Chapters:** {manga.chapters()}''' if manga.status()=="FINISHED" else ''}
-**Ratings:** {manga.averageScore()}/100
+**Rating:** {manga.averageScore()}/100
 
 **Characters:** {", ".join([ch["node"]["name"]["full"] for ch in manga.media[0]["characters"]["edges"]])}
 **Description:**"""
     msg2 = f"""
 **Tags:** {" ".join(["#"+tag.replace(" ","_").replace("-","_") for tag in manga.tags()])}
 """
-    await callback_query.message.edit_media(types.InputMediaPhoto(manga.coverImage("extraLarge"), (msg1 + manga.description()[:(1019-len(msg1)-len(msg2))]+"...\n"+msg2 if len(msg1+manga.description()+msg2) > 1024 else msg1+manga.description()+msg2)))
+    await callback_query.message.edit_media(types.InputMediaPhoto(manga.coverImage("extraLarge"), (msg1 + manga.description()[:(1019-len(msg1)-len(msg2))]+"...\n"+msg2 if len(msg1+manga.description()+msg2) > 1024 else msg1+manga.description()+msg2)), reply_markup=types.InlineKeyboardMarkup([[types.InlineKeyboardButton("On Anilist", url=f"https://Anilist.co/manga/{manga.media[0]['id']}/")]]))
 
 
 @app.on_callback_query(filters.regex("CHR"))
@@ -93,4 +95,4 @@ async def getCharacter(client, callback_query):
 **Description:**
 {character.description()}
 """
-    await callback_query.message.edit_media(types.InputMediaPhoto(character.image("large"), (caption[:1021]+"..." if len(caption) > 1024 else caption)))
+    await callback_query.message.edit_media(types.InputMediaPhoto(character.image("large"), (caption[:1021]+"..." if len(caption) > 1024 else caption)), reply_markup=types.InlineKeyboardMarkup([[types.InlineKeyboardButton("On Anilist", url=f"https://anilist.co/character/{character.media['id']}/")]]))
