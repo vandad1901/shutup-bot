@@ -59,7 +59,8 @@ async def getLastFMTops(client, message):
 
     try:
         assert(len(message.command) in (3, 4))
-        assert(message.command[1] in ("artists", "tracks", "albums", "tags"))
+        assert(message.command[1].startswith(
+            ("artist", "track", "album", "tag")))
         assert(message.command[2] in timePeriods)
         if(len(message.command) == 4):
             limit = int(message.command[3])
@@ -72,22 +73,22 @@ async def getLastFMTops(client, message):
         type = message.command[1]
         period = timePeriods[message.command[2]]
         # TODO change to switch in python 3.10
-        if(type == "artists"):
+        if(type.startswith("artist")):
             results = user.get_top_artists(period, limit)
             await message.reply_text(
                 f"**{message.from_user.first_name}**'s top artist{'s are' if len(results)>1 else ' is'}:\n{chr(10).join([f'{s[0]}. {s[1].item.name}' for s in zip(itertools.count(1), results)])}")
 
-        elif(type == "albums"):
+        elif(type.startswith("album")):
             results = user.get_top_albums(period, limit)
             await message.reply_text(
                 f"**{message.from_user.first_name}**'s top album{'s are' if len(results)>1 else ' is'}:\n{chr(10).join([f'{s[0]}. {s[1].item.artist} - {s[1].item.title}' for s in zip(itertools.count(1), results)])}")
 
-        elif(type == "tracks"):
+        elif(type.startswith("track")):
             results = user.get_top_tracks(period, limit)
             await message.reply_text(
                 f"**{message.from_user.first_name}**'s top track{'s are' if len(results)>1 else ' is'}:\n{chr(10).join([f'{s[0]}. {s[1].item.artist} - {s[1].item.title}' for s in zip(itertools.count(1), results)])}")
 
-        elif(type == "tags"):
+        elif(type.startswith("tag")):
             results = user.get_top_tags(limit)
             await message.reply_text(
                 f"**{message.from_user.first_name}**'s top tag{'s are' if len(results)>1 else ' is'}:\n{chr(10).join([f'{s[0]}. {s[1].name}' for s in zip(itertools.count(1), results)])}")
