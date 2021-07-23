@@ -57,4 +57,4 @@ def makeButtons(buttons, buttonTable):
 
 
 def getFullName(user):
-    return " ".join([user.first_name if user.first_name else "", user.last_name if user.last_name else ""])
+    return " ".join([user.first_name if user.first_name else "", user.last_name if user.last_name else ""]).strip()
