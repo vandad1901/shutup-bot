@@ -6,6 +6,8 @@ Searches Anilist for an anime
 **/character**
 Searches Anilist for a character
 """
+import time
+
 from anilistpy import (Anime, Character, Manga, animeSearch, charSearch,
                        mangaSearch)
 from common import makeButtons
@@ -48,12 +50,17 @@ async def getCharacterSearch(client, message):
 async def getAnime(client, callback_query):
     args = callback_query.data.split(":")
     anime = Anime(args[1])
+    try:
+        nextEpisode = time.strftime('%a %Y-%m-%d %H:%M UTC', time.gmtime(int(anime.media[0]["nextAiringEpisode"]["airingAt"])))
+    except:
+        nextEpisode = None
     msg1 = f"""
 **Title:** {anime.title("romaji")}{f"({anime.title('english')})" if anime.title("english") else ""}
 **Genres:** {", ".join(anime.genres())}
-**Start/End:** {anime.startDate()["day"] if anime.startDate()["day"] else "TBD"}/{anime.startDate()["month"]}/{anime.startDate()["year"]} - {f'{anime.endDate()["day"]}/{anime.endDate()["month"]}/{anime.endDate()["year"]}' if anime.endDate()["year"] else 'TBD'}
-**Episodes:** {anime.episodes()} ({anime.status().replace("_"," ").lower().capitalize()}){f'''
-**Duration:** {anime.duration()} minute{"s" if anime.duration()>1 else ""}''' if anime.duration() else ""}
+**Start/End:** {anime.startDate()["day"] if anime.startDate()["day"] else "TBD"}/{anime.startDate()["month"]}/{anime.startDate()["year"]} - {f'{anime.endDate()["day"]}/{anime.endDate()["month"]}/{anime.endDate()["year"]}' if anime.endDate()["year"] else 'TBD'} ({anime.season()})
+**Episodes:** {anime.episodes()} ({anime.status().replace("_"," ").lower().capitalize()}){
+f'''{chr(10)}**Next episode:** {nextEpisode}''' if nextEpisode else ""}{
+f'''{chr(10)}**Duration:** {anime.duration()} minute{'s' if anime.duration()>1 else ''}''' if anime.duration() else ""}
 **Rating:** {anime.averageScore()}/100
 
 **Characters:** {", ".join([ch["node"]["name"]["full"] for ch in anime.media[0]["characters"]["edges"]])}
@@ -62,7 +69,12 @@ async def getAnime(client, callback_query):
 **Studios:** {", ".join(anime.studios())}
 **Tags:** {" ".join(["#"+tag.replace(" ","_").replace("-","_") for tag in anime.tags()])}
 """
-    await callback_query.message.edit_media(types.InputMediaPhoto(anime.coverImage("extraLarge"), (msg1 + anime.description()[:(1019-len(msg1)-len(msg2))]+"...\n"+msg2 if len(msg1+anime.description()+msg2) > 1024 else msg1+anime.description()+msg2)), reply_markup=types.InlineKeyboardMarkup([[types.InlineKeyboardButton("On Anilist", url=f"https://anilist.co/anime/{anime.media[0]['id']}/"), types.InlineKeyboardButton(f"Trailer{emoji.CLAPPER_BOARD}", url=anime.trailerlink())]]))
+    buttons = [types.InlineKeyboardButton("On Anilist", url=f"https://anilist.co/anime/{anime.media[0]['id']}/")]
+    try:
+        buttons.append(types.InlineKeyboardButton(f"Trailer{emoji.CLAPPER_BOARD}", url=anime.trailerlink()))
+    except:
+        pass
+    await callback_query.message.edit_media(types.InputMediaPhoto(anime.coverImage("extraLarge"), (msg1 + anime.description()[:(1019-len(msg1)-len(msg2))]+"...\n"+msg2 if len(msg1+anime.description()+msg2) > 1024 else msg1+anime.description()+msg2)), reply_markup=types.InlineKeyboardMarkup([buttons]))
 
 
 @app.on_callback_query(filters.regex("MANGA"))
