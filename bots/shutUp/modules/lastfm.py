@@ -4,7 +4,7 @@ Used to get you currently scrobbling song on last.fm
 Usage:
 **/lastfm**
 to get your now playing song
-**/lastfm_top
+**/lastfm_top**
 get top albums, artists, tracks or tags in a certain time period
 **/setlastfm**
 to set your lastfm username
