@@ -41,7 +41,7 @@ async def kick(client, message):
             return
         await message.chat.unban_member(effectiveId)
         await message.reply_text(
-            f"Kicked {getFullName(app.get_users(effectiveId))}")
+            f"Kicked {getFullName(await app.get_users(effectiveId))}")
     else:
         await message.reply_text(
             "You must have user restricting permissions to use this command")
@@ -69,10 +69,10 @@ async def ban(client, message):
                 msg, amount = timePeriods[t]
                 amount *= factor
                 msg += ('s' if factor != 1 else '')
-                msg = f"Banned {getFullName(app.get_users(effectiveId))} for {factor} {msg}"
+                msg = f"Banned {getFullName(await app.get_users(effectiveId))} for {factor} {msg}"
             else:
                 amount = 0
-                msg = f"Banned {getFullName(app.get_users(effectiveId))} forever"
+                msg = f"Banned {getFullName(await app.get_users(effectiveId))} forever"
             untilTime = amount + int(time.time())
             await message.chat.kick_member(effectiveId, untilTime)
         except errors.exceptions.bad_request_400.UserAdminInvalid:
@@ -100,7 +100,7 @@ async def unban(client, message):
     if((await message.chat.get_member(message.from_user.id)).can_restrict_members or message.from_user.id == owner_id):
         await message.chat.unban_member(effectiveId)
         await message.reply_text(
-            f"Unbanned {getFullName(app.get_users(effectiveId))}")
+            f"Unbanned {getFullName(await app.get_users(effectiveId))}")
     else:
         await message.reply_text(
             "You must have user restricting permissions to use this command")
