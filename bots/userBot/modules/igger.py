@@ -8,7 +8,7 @@ from ..userbot import usr, isModuleToggledFilter
 iggerEnable = True
 
 
-@usr.on_message(filters.regex("^[nんンNنΝνИ]$") & filters.incoming & isModuleToggledFilter("igger"))
+@usr.on_message(filters.regex("^[NnんンنΝνНнנן]$") & filters.incoming & isModuleToggledFilter("igger"))
 async def igger(client, message):
     global iggerEnable
     if(iggerEnable):
