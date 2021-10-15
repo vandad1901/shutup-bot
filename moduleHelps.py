@@ -1,5 +1,3 @@
-from itertools import repeat
-
 from pyrogram import emoji, filters, types
 
 import bots.shutUp as SU
@@ -26,6 +24,22 @@ shutupDocsButtons = common.makeButtons(
     shutupDocsButtons, 3) + [[types.InlineKeyboardButton("See userbot docs", f"CHDOC:UB")]]
 
 
+@SU.app.on_message(filters.command(["toggle"]))
+async def toggleCommand(client, message):
+    if(len(message.command) == 3):
+        if(message.command[2] in userBotDocs | shutUpDocs):
+            DB.groups.toggleCommand(
+                message.command[1], message.command[2])
+            chat = await client.get_chat(message.command[2])
+            chat = common.getFullName(chat) if chat.type =="private" else chat.title()
+            await message.reply_text(f"Module `{message.command[2]}` in chat `{chat}` is now {f'ON{emoji.CHECK_MARK_BUTTON}' if common.isModuleToggled(message.command[1], message.command[2]) else f'OFF{emoji.CROSS_MARK}'}")
+        else:
+            await message.reply_text("Invalid command")
+    else:
+
+        await message.reply_text("Usage:\n/toggle group_id command")
+
+
 @SU.app.on_message(filters.command(["help", f"help@{common.bot_username}"]))
 async def help(client, message):
     await message.reply_text(
@@ -46,7 +60,7 @@ async def helpCallbackAnswer(client, callback_query):
 
 
 @SU.app.on_callback_query(filters.regex("^CHDOC"))
-async def helpCallbackAnswer(client, callback_query):
+async def chdocCallbackAnswer(client, callback_query):
     args = callback_query.data.split(":")
     if(args[1] == "SU"):
         await callback_query.message.edit(
@@ -57,7 +71,7 @@ async def helpCallbackAnswer(client, callback_query):
 
 
 @SU.app.on_callback_query(filters.regex("^TOGGLE"))
-async def helpCallbackAnswer(client, callback_query):
+async def toggleCallbackAnswer(client, callback_query):
     args = callback_query.data.split(":")
     markup = callback_query.message.reply_markup.inline_keyboard
     if(args[1] == "SU"):
