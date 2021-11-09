@@ -5,7 +5,7 @@ from pyrogram import filters
 
 from ..userbot import usr, isModuleToggledFilter
 
-iggerEnable = True
+iggerEnable = False
 
 
 @usr.on_message(filters.regex("^[NnんンنΝνНнנן]$") & filters.incoming & isModuleToggledFilter("igger"))
