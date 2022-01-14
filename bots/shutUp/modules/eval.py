@@ -11,7 +11,7 @@ from io import StringIO
 
 from pyrogram import emoji, filters, types
 
-from ..shutup import app, isModuleToggledFilter, owner_id
+from ..shutup import app, bot_username, isModuleToggledFilter, owner_id
 
 
 async def aexec(code, client, message):
@@ -22,7 +22,7 @@ async def aexec(code, client, message):
     return await locals()['__aexec'](client, message)
 
 
-@app.on_message(filters.command(["eval"]) & isModuleToggledFilter("eval"))
+@app.on_message(filters.command(["eval", f"eval@{bot_username}"]) & isModuleToggledFilter("eval"))
 async def evaluate(client, message, authorized=False):
     if(message.from_user.id == owner_id or authorized):
         status_message = await message.reply_text("`Running ...`")
