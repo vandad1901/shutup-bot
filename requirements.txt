@@ -1,9 +1,9 @@
 SQLAlchemy==1.4.19
-Pyrogram==1.2.9
+Pyrogram==1.4.7
 Pillow==8.1.0
 python-dotenv==0.15.0
 psycopg2==2.8.6
-TgCrypto==1.2.2
+TgCrypto==1.2.3
 pylast==4.2.1
 anilistpy==0.0.5.2
 requests==2.25.1
