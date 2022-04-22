@@ -1,3 +1,5 @@
+import asyncio
+from functools import partial, wraps
 from itertools import repeat
 from os import environ
 from urllib.parse import urljoin, urlparse
@@ -23,6 +25,16 @@ lastfm_user = environ["LASTFM_USER"]
 lastfm_pass = environ["LASTFM_PASS"]
 
 aux_user = environ["USER_SESSION_STRING"]
+
+
+def async_wrap(func):
+    @wraps(func)
+    async def run(*args, loop=None, executor=None, **kwargs):
+        if loop is None:
+            loop = asyncio.get_event_loop()
+        pfunc = partial(func, *args, **kwargs)
+        return await loop.run_in_executor(executor, pfunc)
+    return run
 
 
 def isModuleToggled(chatId, moduleName):
@@ -59,4 +71,6 @@ def makeButtons(buttons, buttonTable):
 def getFullName(user):
     return " ".join([user.first_name if user.first_name else "", user.last_name if user.last_name else ""]).strip()
 
-ordinal = lambda n: "%d%s" % (n,"tsnrhtdd"[(n//10%10!=1)*(n%10<4)*n%10::4])
+
+def ordinal(n): return "%d%s" % (
+    n, "tsnrhtdd"[(n//10 % 10 != 1)*(n % 10 < 4)*n % 10::4])
