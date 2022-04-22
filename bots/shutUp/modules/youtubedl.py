@@ -27,8 +27,10 @@ class MyLogger():
         print("error")
 
 
-@app.on_message(filters.command(["youtube", f"youtube@{bot_username}"]))
+@app.on_message((filters.command(["youtube", f"youtube@{bot_username}"]) | filters.regex("^(?:https?:\/\/)?(?:www\.)?youtu\.?be(?:\.com)?\/?.*(?:watch|embed)?(?:.*v=|v\/|\/)([\w\-_]+)\&?")) & ~filters.edited)
 async def youtubeGetInfo(client, message):
+    if(not message.command):
+        message.command = ["/youtube"] + message.text.split()
     ydl_opts = {
         "outtmpl": f"%(title)s {message.from_user.id}.%(ext)s",
         "logger": MyLogger(),
