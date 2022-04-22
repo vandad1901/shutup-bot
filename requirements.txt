@@ -7,3 +7,4 @@ TgCrypto==1.2.3
 pylast==4.2.1
 anilistpy==0.0.5.2
 requests==2.25.1
+yt-dlp==2022.4.8
