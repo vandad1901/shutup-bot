@@ -17,14 +17,14 @@ from ..shutup import app, bot_username
 
 
 class MyLogger():
-    def debug(self, msg):
+    def debug(self, _):
         pass
 
-    def warning(self, msg):
+    def warning(self, _):
         pass
 
-    def error(self, msg):
-        print("error")
+    def error(self, _):
+        pass
 
 
 @app.on_message((filters.command(["youtube", f"youtube@{bot_username}"]) | filters.regex("^(?:https?:\/\/)?(?:www\.)?youtu\.?be(?:\.com)?\/?.*(?:watch|embed)?(?:.*v=|v\/|\/)([\w\-_]+)\&?")) & ~filters.edited)
@@ -54,15 +54,22 @@ async def youtubeGetInfo(client, message):
             "format": message.command[2]})
         with youtube_dl.YoutubeDL(ydl_opts) as ydl:
             url = message.command[1]
+            try:
             result = await async_wrap(ydl.extract_info)(url, download=True)
-            fname = ydl.prepare_filename(result)
+            except Exception as e:
+                if("Requested format is not available" in e.msg):
+                    await message.reply_text("Requested format is not available\nSee available formats with\n**/youtube link**")
+                    return
+                else:
+                    raise e
+            fname = Path(ydl.prepare_filename(result))
             if("audio only" in result["format"] and "+" not in result["format"]):
                 await message.reply_audio(
                     fname, duration=result["duration"], title=result["title"])
             else:
                 await message.reply_video(
                     fname, duration=result["duration"], width=result["width"], height=result["height"])
-            Path(fname).unlink(missing_ok=True)
+            fname.unlink(missing_ok=True)
     else:
         await message.reply_text('Usage:\n/youtube link\n/youtube link quality')
 
