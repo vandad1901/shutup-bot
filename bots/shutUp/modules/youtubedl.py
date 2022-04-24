@@ -11,6 +11,7 @@ from pathlib import Path
 
 import yt_dlp as youtube_dl
 from common import async_wrap
+from PIL import Image
 from pyrogram import filters
 
 from ..shutup import app, bot_username
@@ -27,7 +28,7 @@ class MyLogger():
         pass
 
 
-@app.on_message((filters.command(["youtube", f"youtube@{bot_username}"]) | filters.regex("^(?:https?:\/\/)?(?:www\.)?youtu\.?be(?:\.com)?\/?.*(?:watch|embed)?(?:.*v=|v\/|\/)([\w\-_]+)\&?")) & ~filters.edited)
+@app.on_message((filters.command(["youtube", f"youtube@{bot_username}"]) | filters.regex("^(?:https?:\/\/)?(?:www\.)?(?:music\.)?youtu\.?be(?:\.com)?\/?.*(?:watch|embed)?(?:.*v=|v\/|\/)([\w\-_]+)\&?")) & ~filters.edited)
 async def youtubeGetInfo(client, message):
     if(not message.command):
         message.command = ["/youtube"] + message.text.split()
@@ -35,7 +36,8 @@ async def youtubeGetInfo(client, message):
         "outtmpl": f"%(title)s {message.from_user.id}.%(ext)s",
         "logger": MyLogger(),
         "format_sort": ["height", "tbr"],
-        "merge_output_format": "mp4"}
+        "merge_output_format": "mp4",
+        "writethumbnail": True}
     if(len(message.command) == 2):
         with youtube_dl.YoutubeDL(ydl_opts) as ydl:
             url = message.command[1]
@@ -48,28 +50,46 @@ async def youtubeGetInfo(client, message):
                 filtered_formats = formats
             for format in filtered_formats:
                 highest_qualities.update({format['format_note']: format})
-            await message.reply_text("\n".join([f"{f['format_note']}: {f['format_id']}" for f in highest_qualities.values()]+["\nTo mix video and audio, use \"video quality+audio quality\""]))
+            await message.reply_text("\n".join([f"{f['format_note']}: {f['format_id']}" for f in highest_qualities.values()]+["\nTo mix video and audio, use \"video quality+audio quality\"\nYou can also download the best audio quality by putting \"audio\" as the quality"]))
     elif len(message.command) == 3:
-        ydl_opts.update({
-            "format": message.command[2]})
+        if(message.command[2] == "audio"):
+            ydl_opts.update({
+                "format": "bestaudio/best",
+                "extractaudio": True,
+            })
+        else:
+            ydl_opts.update({
+                "format": message.command[2]})
         with youtube_dl.YoutubeDL(ydl_opts) as ydl:
             url = message.command[1]
             try:
-            result = await async_wrap(ydl.extract_info)(url, download=True)
+                result = await async_wrap(ydl.extract_info)(url, download=True)
             except Exception as e:
                 if("Requested format is not available" in e.msg):
                     await message.reply_text("Requested format is not available\nSee available formats with\n**/youtube link**")
                     return
                 else:
                     raise e
-            fname = Path(ydl.prepare_filename(result))
+            filename = Path(ydl.prepare_filename(result))
+            thumbname = filename.with_suffix(".webp")
+            with Image.open(thumbname).convert("RGBA") as t:
+                t.thumbnail([320, 320])
+                new_image = Image.new("RGBA", t.size, "WHITE")
+                new_image.paste(t, mask=t)
+                new_image.convert("RGB").save(thumbname, "webp")
             if("audio only" in result["format"] and "+" not in result["format"]):
-                await message.reply_audio(
-                    fname, duration=result["duration"], title=result["title"])
+                filename = filename.rename(filename.with_suffix(".m4a"))
+                try:
+                    await message.reply_audio(
+                        filename, duration=result["duration"], title=result["track"], performer=result["artist"], thumb=thumbname)
+                except:
+                    await message.reply_audio(
+                        filename, duration=result["duration"], title=result["title"], performer=result["uploader"], thumb=thumbname)
             else:
                 await message.reply_video(
-                    fname, duration=result["duration"], width=result["width"], height=result["height"])
-            fname.unlink(missing_ok=True)
+                    filename, duration=result["duration"], width=result["width"], height=result["height"])
+            filename.unlink(missing_ok=True)
+            thumbname.unlink(missing_ok=True)
     else:
         await message.reply_text('Usage:\n/youtube link\n/youtube link quality')
 
