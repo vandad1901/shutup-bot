@@ -32,6 +32,8 @@ class MyLogger():
 async def youtubeGetInfo(client, message):
     if(not message.command):
         message.command = ["/youtube"] + message.text.split()
+        if (len(message.text.split()) == 1):
+            return
     ydl_opts = {
         "outtmpl": f"%(title)s {message.from_user.id}.%(ext)s",
         "logger": MyLogger(),
