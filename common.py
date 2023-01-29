@@ -22,8 +22,6 @@ lastfm_secret = environ["LASTFM_SECRET"]
 lastfm_user = environ["LASTFM_USER"]
 lastfm_pass = environ["LASTFM_PASS"]
 
-aux_user = environ["USER_SESSION_STRING"]
-
 
 def async_wrap(func):
     @wraps(func)
