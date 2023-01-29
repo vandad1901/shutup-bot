@@ -1,6 +1,7 @@
 import DBManagement as DB
-from common import (api_hash, api_id, aux_user, bot_username,
+from common import (api_hash, api_id, bot_username,
                     isModuleToggledFilter)
+#from common import aux_user
 from pyrogram import Client
 
 from ..shutUp import app

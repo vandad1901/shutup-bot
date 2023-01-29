@@ -4,4 +4,5 @@ from common import (api_hash, api_id, bot_token, bot_username, getFullName,
                     lastfm_secret, lastfm_user, owner_id)
 from pyrogram import Client, filters
 
-app = Client(":memory:", api_id, api_hash, bot_token=bot_token)
+app = Client("shutupbot", api_id=api_id, api_hash=api_hash,
+             bot_token=bot_token, in_memory=True)
