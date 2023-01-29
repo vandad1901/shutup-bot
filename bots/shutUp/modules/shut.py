@@ -21,7 +21,7 @@ async def shut(client, message):
         await message.reply_text("You need delete permission in this group to be able to toggle \"shut\"")
 
 
-@app.on_message(~filters.me & ~filters.edited & filters.group & isShut & isModuleToggledFilter("shut"), group=0)
+@app.on_message(~filters.me & filters.group & isShut & isModuleToggledFilter("shut"), group=0)
 async def deleteIfShut(client, message):
     print(f"{message.from_user.first_name} broke the shut")
     if(message.from_user.id != owner_id):

@@ -28,7 +28,7 @@ class MyLogger():
         pass
 
 
-@app.on_message((filters.command(["youtube", f"youtube@{bot_username}"]) | filters.regex("^(?:https?:\/\/)?(?:www\.)?(?:music\.)?youtu\.?be(?:\.com)?\/?.*(?:watch|embed)?(?:.*v=|v\/|\/)([\w\-_]+)\&?")) & ~filters.edited)
+@app.on_message((filters.command(["youtube", f"youtube@{bot_username}"]) | filters.regex("^(?:https?:\/\/)?(?:www\.)?(?:music\.)?youtu\.?be(?:\.com)?\/?.*(?:watch|embed)?(?:.*v=|v\/|\/)([\w\-_]+)\&?")))
 async def youtubeGetInfo(client, message):
     if(not message.command):
         message.command = ["/youtube"] + message.text.split()
