@@ -2,7 +2,6 @@ import asyncio
 from functools import partial, wraps
 from itertools import repeat
 from os import environ
-from urllib.parse import urljoin, urlparse
 
 import dotenv
 from pyrogram import filters
@@ -17,7 +16,6 @@ bot_username = environ["BOT_USERNAME"]
 owner_id = int(environ["OWNER_ID"])
 
 database_url = environ["DATABASE_URL"]
-database_url = urlparse(database_url)._replace(scheme="postgresql").geturl()
 
 lastfm_key = environ["LASTFM_KEY"]
 lastfm_secret = environ["LASTFM_SECRET"]
@@ -52,7 +50,7 @@ def isModuleToggledFilter(moduleName):
 
 
 def makeButtons(buttons, buttonTable):
-    if(isinstance(buttonTable, int)):
+    if (isinstance(buttonTable, int)):
         buttonTable = list(repeat(buttonTable, len(buttons)//buttonTable+1))
     buttons = iter(buttons)
     Table = []
@@ -63,7 +61,7 @@ def makeButtons(buttons, buttonTable):
                 Table[i].append(next(buttons))
         return Table
     except StopIteration:
-        if(Table[-1] == []):
+        if (Table[-1] == []):
             Table.pop()
         return Table
 
