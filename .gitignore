@@ -1,10 +1,4 @@
-khafe sho bot.session
+.vscode/
+__pycache__/
 .env
-.vscode
-test.py
-fuck you add.session
-fuck you add.session-journal
-__pycache__
-stop shutup.bat
-start shutup.bat
-log shutup.bat
+test*
