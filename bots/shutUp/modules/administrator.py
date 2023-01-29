@@ -27,11 +27,7 @@ async def setGifId(client, message):
 
 @app.on_message(filters.command(["dump"]))
 async def dumpStuff(client, message):
-    if(message.from_user.id == owner_id):
-        await message.reply_text(str(message.reply_to_message if message.reply_to_message else message))
-    else:
-        await message.reply_text(
-            "This command can only be used by the bot administrator (You're welcome)")
+    await message.reply_text(str(message.reply_to_message if message.reply_to_message else message))
 
 
 @app.on_message(filters.private, group=-1)
