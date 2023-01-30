@@ -14,9 +14,9 @@ from anilistpy import (Anime, Character, Manga, animeSearch, charSearch,
                        mangaSearch)
 from pyrogram import emoji, filters, types
 
-from common import makeButtons, bot_username
+from common import bot_username, makeButtons
 
-from shutup import app
+from ..shutup import app
 
 
 @app.on_message(filters.command(["anime", f"anime@{bot_username}"]))

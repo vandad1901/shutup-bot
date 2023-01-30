@@ -13,11 +13,12 @@ import itertools
 
 import pylast
 from pyrogram import emoji, filters
-from shutup import app
 
 import DBManagement as DB
 from common import (bot_username, lastfm_key, lastfm_pass, lastfm_secret,
                     lastfm_user)
+
+from ..shutup import app
 
 network = pylast.LastFMNetwork(
     api_key=lastfm_key,

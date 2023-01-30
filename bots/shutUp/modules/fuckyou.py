@@ -5,10 +5,11 @@ Usage:
 **/fuckyou**
 """
 from pyrogram import filters
-from shutup import app
 
 import DBManagement as DB
 from common import bot_username, isModuleToggledFilter
+
+from ..shutup import app
 
 
 @app.on_message(filters.command(["fuckyou", f"fuckyou@{bot_username}"]) & isModuleToggledFilter("fuckyou"))

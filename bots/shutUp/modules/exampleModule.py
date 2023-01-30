@@ -7,11 +7,12 @@ explanations
 """
 # Import any pyrogram stuff here
 from pyrogram import filters
-# Import things you need here like owner_id and such
-from shutup import app
 
+# Import things you need here like owner_id and such
 import DBManagement as DB
 from common import bot_username, owner_id
+
+from ..shutup import app
 
 # Not every command needs the f"stuff@{bot_username}" variant. Use your own judgement
 

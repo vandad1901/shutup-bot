@@ -8,7 +8,7 @@ will pin the message that it was replied to
 will unpin the message that it was replied to or if it wasn't a reply to a message will unpin the latest message
 """
 from pyrogram import filters
-from shutup import app
+from ..shutup import app
 
 from common import bot_username, isModuleToggledFilter
 
