@@ -5,13 +5,17 @@ Usage:
 **/stuff** 
 explanations
 """
-from pyrogram import filters  # Import any pyrogram stuff here
-
+# Import any pyrogram stuff here
+from pyrogram import filters
 # Import things you need here like owner_id and such
-from ..shutup import DB, app, bot_username
+from shutup import app
 
+import DBManagement as DB
+from common import bot_username, owner_id
 
 # Not every command needs the f"stuff@{bot_username}" variant. Use your own judgement
+
+
 @app.on_message(filters.command(["Stuff", f"stuff@{bot_username}"]))
 # Name the arguments "client" and "message"
 async def exampleCommandFunc(client, message):

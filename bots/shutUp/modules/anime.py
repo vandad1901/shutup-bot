@@ -12,15 +12,16 @@ import time
 
 from anilistpy import (Anime, Character, Manga, animeSearch, charSearch,
                        mangaSearch)
-from common import makeButtons
 from pyrogram import emoji, filters, types
 
-from ..shutup import app, bot_username
+from common import makeButtons, bot_username
+
+from shutup import app
 
 
 @app.on_message(filters.command(["anime", f"anime@{bot_username}"]))
 async def getAnimeSearch(client, message):
-    if(len(message.command) < 2):
+    if (len(message.command) < 2):
         await message.reply_text('Usage:\n/anime anime name')
         return
     query = " ".join(message.command[1:])
@@ -30,7 +31,7 @@ async def getAnimeSearch(client, message):
 
 @app.on_message(filters.command(["manga", f"manga@{bot_username}"]))
 async def getMangaSearch(client, message):
-    if(len(message.command) < 2):
+    if (len(message.command) < 2):
         await message.reply_text('Usage:\n/manga manga name')
         return
     query = " ".join(message.command[1:])
@@ -40,7 +41,7 @@ async def getMangaSearch(client, message):
 
 @app.on_message(filters.command(["character", f"character@{bot_username}"]))
 async def getCharacterSearch(client, message):
-    if(len(message.command) < 2):
+    if (len(message.command) < 2):
         await message.reply_text('Usage:\n/character character name')
         return
     query = " ".join(message.command[1:])

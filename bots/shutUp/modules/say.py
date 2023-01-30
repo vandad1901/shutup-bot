@@ -6,7 +6,9 @@ Usage:
 """
 from pyrogram import filters
 
-from ..shutup import app, bot_username, isModuleToggledFilter
+from common import bot_username, isModuleToggledFilter
+
+from ..shutup import app
 
 
 @app.on_message(filters.command(["say", f"say@{bot_username}"]) & isModuleToggledFilter("say"))
@@ -15,7 +17,7 @@ async def say(client, message):
         await message.delete()
     except:
         await message.reply_text("Failed to delete(check permissions)")
-    if(message.reply_to_message):
+    if (message.reply_to_message):
         await message.reply_to_message.reply_text(" ".join(
             message.command[1:]))
     else:

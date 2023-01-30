@@ -12,11 +12,12 @@ to set your lastfm username
 import itertools
 
 import pylast
-from common import ordinal
 from pyrogram import emoji, filters
+from shutup import app
 
-from ..shutup import (DB, app, bot_username, lastfm_key, lastfm_pass,
-                      lastfm_secret, lastfm_user)
+import DBManagement as DB
+from common import (bot_username, lastfm_key, lastfm_pass, lastfm_secret,
+                    lastfm_user)
 
 network = pylast.LastFMNetwork(
     api_key=lastfm_key,
@@ -28,7 +29,7 @@ timePeriods = {"overall": pylast.PERIOD_OVERALL, "week": pylast.PERIOD_7DAYS, "m
 
 @app.on_message(filters.command(["lastfm", f"lastfm@{bot_username}"]))
 async def getLastFMScrobbles(client, message):
-    lastFMName = DB.users.get(str(message.from_user.id)).lastfm
+    lastFMName = DB.users.get(str(message.from_user.id))["lastfm"]
     if (not lastFMName):
         await message.reply_text("Set your last.fm username with /setlastfm")
         return
@@ -51,7 +52,7 @@ async def getLastFMScrobbles(client, message):
 
 @app.on_message(filters.command(["lastfm_top", f"lastfm_top@{bot_username}"]))
 async def getLastFMTops(client, message):
-    lastFMName = DB.users.get(str(message.from_user.id)).lastfm
+    lastFMName = DB.users.get(str(message.from_user.id))["lastfm"]
     if (not lastFMName):
         await message.reply_text("Set your last.fm username with /setlastfm")
         return

@@ -1,10 +1,8 @@
-import DBManagement as DB
-from common import (api_hash, api_id, bot_username,
-                    isModuleToggledFilter)
-#from common import aux_user
-from pyrogram import Client
 
-from ..shutUp import app
+from pyrogram.client import Client
 
-usr = Client(aux_user, api_id=api_id, api_hash=api_hash) # Comment this for USER_SESSION_STRING
-#usr = Client(":memory:", api_id, api_hash) # Uncomment this for USER_SESSION_STRING
+from common import api_hash, api_id, aux_user
+
+# Comment this for USER_SESSION_STRING
+usr = Client(aux_user, api_id=api_id, api_hash=api_hash)
+# usr = Client(":memory:", api_id, api_hash) # Uncomment this for USER_SESSION_STRING

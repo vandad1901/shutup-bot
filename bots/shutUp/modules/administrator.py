@@ -8,13 +8,15 @@ reply to a gif or use the gif id as argument to set the /fuckyou gif if
 dumps some basic info
 """
 from pyrogram import filters
+from shutUp import app
 
-from ..shutup import DB, app, bot_username, owner_id
+import DBManagement as DB
+from common import bot_username, owner_id
 
 
 @app.on_message(filters.command(["setgifid", f"setgifid@{bot_username}"]))
 async def setGifId(client, message):
-    if(message.from_user.id == owner_id):
+    if (message.from_user.id == owner_id):
         try:
             animationId = message.reply_to_message.animation.file_id
         except:
@@ -32,6 +34,6 @@ async def dumpStuff(client, message):
 
 @app.on_message(filters.private, group=-1)
 async def newId(client, message):
-    userId = str(message.from_user.id)
-    if(DB.users.add(userId)):
+    userId = message.from_user.id
+    if (DB.users.add(userId)):
         print(DB.users.get())
