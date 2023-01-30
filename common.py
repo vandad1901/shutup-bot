@@ -14,6 +14,8 @@ api_hash = environ["API_HASH"]
 bot_token = environ["BOT_TOKEN"]
 bot_username = environ["BOT_USERNAME"]
 owner_id = int(environ["OWNER_ID"])
+# aux_user = environ["USER_SESSION_STRING"]
+aux_user = ""
 
 database_url = environ["DATABASE_URL"]
 
@@ -34,9 +36,9 @@ def async_wrap(func):
 
 
 def isModuleToggled(chatId, moduleName):
-    toggles = DB.groups.get(chatId).commands
+    toggles = DB.groups.get(chatId)["commands"]
     try:
-        return toggles[moduleName]
+        return toggles.get(moduleName, True)
     except (KeyError, TypeError):
         return True
 
@@ -65,7 +67,7 @@ def makeButtons(buttons, buttonTable):
 
 
 def getFullName(user):
-    return " ".join([user.first_name if user.first_name else "", user.last_name if user.last_name else ""]).strip()
+    return f"{user.first_name} {user.last_name}".strip()
 
 
 def ordinal(n): return "%d%s" % (

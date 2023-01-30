@@ -8,8 +8,9 @@ Usage:
 import time
 
 from pyrogram import filters
+from shutup import app
 
-from ..shutup import app, bot_username, isModuleToggledFilter
+from common import bot_username, isModuleToggledFilter
 
 
 @app.on_message(filters.command(["ping", f"ping@{bot_username}"]) & isModuleToggledFilter("ping"))

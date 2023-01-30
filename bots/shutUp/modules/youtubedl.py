@@ -10,11 +10,11 @@ Downloads the video with the selected quality
 from pathlib import Path
 
 import yt_dlp as youtube_dl
-from common import async_wrap
 from PIL import Image
 from pyrogram import filters
+from shutup import app
 
-from ..shutup import app, bot_username
+from common import async_wrap, bot_username
 
 
 class MyLogger():
@@ -30,7 +30,7 @@ class MyLogger():
 
 @app.on_message((filters.command(["youtube", f"youtube@{bot_username}"]) | filters.regex("^(?:https?:\/\/)?(?:www\.)?(?:music\.)?youtu\.?be(?:\.com)?\/?.*(?:watch|embed)?(?:.*v=|v\/|\/)([\w\-_]+)\&?")))
 async def youtubeGetInfo(client, message):
-    if(not message.command):
+    if (not message.command):
         message.command = ["/youtube"] + message.text.split()
         if (len(message.text.split()) == 1):
             return
@@ -40,7 +40,7 @@ async def youtubeGetInfo(client, message):
         "format_sort": ["height", "tbr"],
         "merge_output_format": "mp4",
         "writethumbnail": True}
-    if(len(message.command) == 2):
+    if (len(message.command) == 2):
         with youtube_dl.YoutubeDL(ydl_opts) as ydl:
             url = message.command[1]
             result = ydl.extract_info(url, download=False)
@@ -54,7 +54,7 @@ async def youtubeGetInfo(client, message):
                 highest_qualities.update({format['format_note']: format})
             await message.reply_text("\n".join([f"{f['format_note']}: {f['format_id']}" for f in highest_qualities.values()]+["\nTo mix video and audio, use \"video quality+audio quality\"\nYou can also download the best audio quality by putting \"audio\" as the quality"]))
     elif len(message.command) == 3:
-        if(message.command[2] == "audio"):
+        if (message.command[2] == "audio"):
             ydl_opts.update({
                 "format": "bestaudio/best",
                 "extractaudio": True,
@@ -67,7 +67,7 @@ async def youtubeGetInfo(client, message):
             try:
                 result = await async_wrap(ydl.extract_info)(url, download=True)
             except Exception as e:
-                if("Requested format is not available" in e.msg):
+                if ("Requested format is not available" in e.msg):
                     await message.reply_text("Requested format is not available\nSee available formats with\n**/youtube link**")
                     return
                 else:
@@ -79,7 +79,7 @@ async def youtubeGetInfo(client, message):
                 new_image = Image.new("RGBA", t.size, "WHITE")
                 new_image.paste(t, mask=t)
                 new_image.convert("RGB").save(thumbname, "webp")
-            if("audio only" in result["format"] and "+" not in result["format"]):
+            if ("audio only" in result["format"] and "+" not in result["format"]):
                 filename = filename.rename(filename.with_suffix(".m4a"))
                 try:
                     await message.reply_audio(

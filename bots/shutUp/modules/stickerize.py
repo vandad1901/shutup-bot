@@ -8,19 +8,20 @@ import os
 
 from PIL import Image
 from pyrogram import filters
+from shutup import app
 
-from ..shutup import app, bot_username, isModuleToggledFilter
+from common import bot_username, isModuleToggledFilter
 
 
 @app.on_message(filters.command(["stickerize", f"stickerize@{bot_username}"]) & isModuleToggledFilter("stickerize"))
 async def stickerize(client, message):
-    if(message.reply_to_message):
+    if (message.reply_to_message):
         imgpath = await message.reply_to_message.download()
         img = Image.open(imgpath)
         img.thumbnail((512, 512))
         w, h = img.size
 
-        if(w > h):
+        if (w > h):
             img = img.resize((512, (512*h)//w))
         else:
             img = img.resize(((512*w)//h, 512))

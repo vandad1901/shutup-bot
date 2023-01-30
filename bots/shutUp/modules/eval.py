@@ -10,8 +10,9 @@ import traceback
 from io import StringIO
 
 from pyrogram import emoji, filters, types
+from shutup import app
 
-from ..shutup import app, bot_username, isModuleToggledFilter, owner_id
+from common import bot_username, isModuleToggledFilter, owner_id
 
 
 async def aexec(code, client, message):
@@ -24,7 +25,7 @@ async def aexec(code, client, message):
 
 @app.on_message(filters.command(["eval", f"eval@{bot_username}"]) & isModuleToggledFilter("eval"))
 async def evaluate(client, message, authorized=False):
-    if(message.from_user.id == owner_id or authorized):
+    if (message.from_user.id == owner_id or authorized):
         status_message = await message.reply_text("`Running ...`")
         try:
             cmd = message.text.split(" ", maxsplit=1)[1]
@@ -77,10 +78,10 @@ async def evaluate(client, message, authorized=False):
 
 @app.on_callback_query(filters.regex("^EVAL"))
 async def authorizeEval(client, callback_query):
-    if(callback_query.from_user.id == owner_id):
-        if(callback_query.data == "EVAL:DENY"):
+    if (callback_query.from_user.id == owner_id):
+        if (callback_query.data == "EVAL:DENY"):
             await callback_query.message.edit_text("Denied")
-        elif(callback_query.data == "EVAL:ALLOW"):
+        elif (callback_query.data == "EVAL:ALLOW"):
             await callback_query.message.edit_text("Allowed")
             await evaluate(client, callback_query.message.reply_to_message, True)
     else:

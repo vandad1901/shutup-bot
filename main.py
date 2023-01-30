@@ -1,21 +1,28 @@
-from pyrogram import idle
+import asyncio
+
+import uvloop
+from pyrogram.sync import idle
 
 import bots.shutUp as SU
-#import bots.userBot as UB
 import common
 import moduleHelps
 
-SU.app.start()
-#UB.usr.start()
 
-SU.app.send_message(common.owner_id, "Starting")
-print("Starting")
+async def main():
+    apps = [SU.app]
 
-idle()
+    for app in apps:
+        await app.start()
+    await SU.app.send_message(common.owner_id, "Starting")
+    print("Starting")
 
-SU.app.send_message(common.owner_id, "Stopping")
-print("Stopping")
-#print(UB.usr.export_session_string())
+    await idle()
 
-SU.app.stop()
-#UB.usr.stop()
+    await SU.app.send_message(common.owner_id, "Stopping")
+    print("Stopping")
+    # print(UB.usr.export_session_string())
+    for app in apps:
+        await app.stop()
+
+uvloop.install()
+asyncio.run(main())
