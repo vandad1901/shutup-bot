@@ -8,9 +8,10 @@ import os
 
 from PIL import Image
 from pyrogram import filters
-from shutup import app
 
 from common import bot_username, isModuleToggledFilter
+
+from ..shutup import app
 
 
 @app.on_message(filters.command(["stickerize", f"stickerize@{bot_username}"]) & isModuleToggledFilter("stickerize"))

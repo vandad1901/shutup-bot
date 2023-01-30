@@ -6,10 +6,11 @@ Usage:
 **/shut**
 """
 from pyrogram import filters
-from shutup import app
 
 import DBManagement as DB
 from common import bot_username, isModuleToggledFilter, owner_id
+
+from ..shutup import app
 
 isShut = filters.create(lambda _, __, query: bool(
     DB.groups.get(str(query.chat.id))["shut"]))

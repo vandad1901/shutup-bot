@@ -13,9 +13,10 @@ To unban a member. Reply to user or have their username or id as the argument
 import time
 
 from pyrogram import errors, filters
-from shutup import app
 
 from common import bot_username, getFullName, owner_id
+
+from ..shutup import app
 
 timePeriods = dict(zip(['s', 'm', 'h', 'd', 'w', 'M', 'y'], [('second', 1), ('minute', 60), (
     "hour", 3600), ("day", 86400), ("week", 86400*7), ("month", 86400*30), ("year", 86400*365)]))

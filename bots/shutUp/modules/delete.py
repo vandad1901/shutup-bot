@@ -5,9 +5,10 @@ Usage:
 **/del**
 """
 from pyrogram import filters
-from shutup import app
 
-from common import bot_username, isModuleToggled, owner_id
+from common import bot_username, isModuleToggledFilter, owner_id
+
+from ..shutup import app
 
 
 @app.on_message(filters.command(["del", f"del@{bot_username}"]) & filters.group & isModuleToggledFilter("delete"))

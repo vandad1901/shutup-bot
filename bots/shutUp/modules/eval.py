@@ -10,9 +10,10 @@ import traceback
 from io import StringIO
 
 from pyrogram import emoji, filters, types
-from shutup import app
 
 from common import bot_username, isModuleToggledFilter, owner_id
+
+from ..shutup import app
 
 
 async def aexec(code, client, message):

@@ -12,9 +12,10 @@ from pathlib import Path
 import yt_dlp as youtube_dl
 from PIL import Image
 from pyrogram import filters
-from shutup import app
 
 from common import async_wrap, bot_username
+
+from ..shutup import app
 
 
 class MyLogger():

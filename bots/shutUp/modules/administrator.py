@@ -8,10 +8,11 @@ reply to a gif or use the gif id as argument to set the /fuckyou gif if
 dumps some basic info
 """
 from pyrogram import filters
-from shutUp import app
 
 import DBManagement as DB
 from common import bot_username, owner_id
+
+from ..shutup import app
 
 
 @app.on_message(filters.command(["setgifid", f"setgifid@{bot_username}"]))
