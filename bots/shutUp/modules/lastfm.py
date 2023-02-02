@@ -102,7 +102,7 @@ async def getLastFMTops(client, message):
 @app.on_message(filters.command(["setlastfm", f"setlastfm@{bot_username}"]))
 async def setLastFMName(client, message):
     if (len(message.command) == 2):
-        DB.users.setLastfm(str(message.from_user.id), message.command[1])
+        DB.users.setLastfm(message.from_user.id, message.command[1])
         await message.reply_text(f"Successfully set your lastfm username to {message.command[1]}")
     else:
         await message.reply_text("Usage:\n/setlastfm username")
