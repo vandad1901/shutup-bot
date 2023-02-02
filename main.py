@@ -1,9 +1,8 @@
 import asyncio
-
+import time
 import uvloop
 from pyrogram.sync import idle
-
-
+from pyrogram import filters
 
 import DBManagement as DB
 import common
@@ -11,21 +10,17 @@ import bots.shutUp as SU
 import moduleHelps
 
 
-async def main():
-    apps = [SU.app]
+apps = [SU.app]
 
-    for app in apps:
-        await app.start()
-    await SU.app.send_message(common.owner_id, "Starting")
-    print("Starting")
+for app in apps:
+    app.start()
+SU.app.send_message(common.owner_id, "Starting")
+print("Starting")
 
-    await idle()
+idle()
 
-    await SU.app.send_message(common.owner_id, "Stopping")
-    print("Stopping")
-    # print(UB.usr.export_session_string())
-    for app in apps:
-        await app.stop()
-
-uvloop.install()
-asyncio.run(main())
+SU.app.send_message(common.owner_id, "Stopping")
+print("Stopping")
+# print(UB.usr.export_session_string())
+for app in apps:
+    app.stop()
