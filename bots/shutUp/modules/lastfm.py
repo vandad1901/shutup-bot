@@ -16,7 +16,7 @@ from pyrogram import Client, emoji, filters
 
 import DBManagement as DB
 from common import (bot_username, lastfm_key, lastfm_pass, lastfm_secret,
-                    lastfm_user)
+                    lastfm_user, ordinal)
 
 network = pylast.LastFMNetwork(
     api_key=lastfm_key,
