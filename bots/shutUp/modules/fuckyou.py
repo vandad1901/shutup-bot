@@ -15,10 +15,10 @@ from ..shutup import app
 @app.on_message(filters.command(["fuckyou", f"fuckyou@{bot_username}"]) & isModuleToggledFilter("fuckyou"))
 async def fuckYou(client, message):
     try:
-        anId = DB.animations.get()[-1].animationid
+        anId = DB.animations.getLatest()
     except:
-        DB.animations.add("CgADBAADEgcAAqNhEVIQydI7mWvdvBYE")
         anId = "CgADBAADEgcAAqNhEVIQydI7mWvdvBYE"
+        DB.animations.add(anId)
     if (message.reply_to_message):
         await message.reply_to_message.reply_animation(animation=anId)
     else:

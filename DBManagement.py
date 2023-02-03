@@ -1,7 +1,7 @@
 from datetime import datetime
 from typing import Any, Optional, TypedDict, Union
 
-from pymongo import MongoClient, DESCENDING
+from pymongo import ASCENDING, DESCENDING, MongoClient
 from pyrogram.types import Message
 
 from common import database_url
@@ -104,5 +104,9 @@ class animations():
                                        upsert=True)
 
     @staticmethod
-    def get() -> list:
-        return list(database.animations.find(sort=[('insert_date', DESCENDING)]))
+    def get() -> list[dict]:
+        return list(database.animations.find(sort=[('insert_date', ASCENDING)]))
+
+    @staticmethod
+    def getLatest() -> dict:
+        return database.animations.find(sort=[('insert_date', DESCENDING)])[0]
