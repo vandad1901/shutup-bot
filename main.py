@@ -6,7 +6,7 @@ from pyrogram import filters
 
 import DBManagement as DB
 import common
-import bots.shutUp as SU
+import bots.shutUp.shutup as SU
 import moduleHelps
 
 

@@ -11,11 +11,9 @@ from pathlib import Path
 
 import yt_dlp as youtube_dl
 from PIL import Image
-from pyrogram import filters
+from pyrogram import Client, filters
 
 from common import async_wrap, bot_username
-
-from ..shutup import app
 
 
 class MyLogger():
@@ -29,7 +27,7 @@ class MyLogger():
         pass
 
 
-@app.on_message((filters.command(["youtube", f"youtube@{bot_username}"]) | filters.regex("^(?:https?:\/\/)?(?:www\.)?(?:music\.)?youtu\.?be(?:\.com)?\/?.*(?:watch|embed)?(?:.*v=|v\/|\/)([\w\-_]+)\&?")))
+@Client.on_message((filters.command(["youtube", f"youtube@{bot_username}"]) | filters.regex("^(?:https?:\/\/)?(?:www\.)?(?:music\.)?youtu\.?be(?:\.com)?\/?.*(?:watch|embed)?(?:.*v=|v\/|\/)([\w\-_]+)\&?")))
 async def youtubeGetInfo(client, message):
     if (not message.command):
         message.command = ["/youtube"] + message.text.split()
@@ -97,7 +95,7 @@ async def youtubeGetInfo(client, message):
         await message.reply_text('Usage:\n/youtube link\n/youtube link quality')
 
 
-@app.on_callback_query(filters.regex("^YTDL"))
+@Client.on_callback_query(filters.regex("^YTDL"))
 async def exampleCallbackQueryFunc(client, callback_query):
     args = callback_query.data.split(":")
     pass

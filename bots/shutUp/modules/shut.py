@@ -5,17 +5,15 @@ To turn it off simply send the command again
 Usage:
 **/shut**
 """
-from pyrogram import filters
+from pyrogram import Client, filters
 
 import DBManagement as DB
 from common import bot_username, isModuleToggledFilter, owner_id
 
-from ..shutup import app
-
 isShut = filters.create(lambda _, __, query: bool(DB.groups.get(query.chat.id)["shut"]))
 
 
-@app.on_message(filters.command(["shut", f"shut@{bot_username}"]) & filters.group & isModuleToggledFilter("shut"), group=0)
+@Client.on_message(filters.command(["shut", f"shut@{bot_username}"]) & filters.group & isModuleToggledFilter("shut"), group=0)
 async def shut(client, message):
     if ((await message.chat.get_member(message.from_user.id)).can_delete_messages or message.from_user.id == owner_id):
         DB.groups.toggleShut(message.chat.id)
@@ -23,7 +21,7 @@ async def shut(client, message):
         await message.reply_text("You need delete permission in this group to be able to toggle \"shut\"")
 
 
-@app.on_message(~filters.me & filters.group & isShut & isModuleToggledFilter("shut"), group=0)
+@Client.on_message(~filters.me & filters.group & isShut & isModuleToggledFilter("shut"), group=0)
 async def deleteIfShut(client, message):
     print(f"{message.from_user.first_name} broke the shut")
     if (message.from_user.id != owner_id):
