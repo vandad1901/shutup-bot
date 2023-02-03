@@ -15,12 +15,12 @@ for i in SU.modules.allFiles:
 
 userBotDocsButtons = [types.InlineKeyboardButton(
     doc, f"HELP:UB:{doc}") for doc in userBotDocs]
-userBotDocsButtons = common.makeButtons(
+userBotDocsButtons = common.partition(
     userBotDocsButtons, 3) + [[types.InlineKeyboardButton("See shutup docs", f"CHDOC:SU")]]
 
 shutupDocsButtons = [types.InlineKeyboardButton(
     doc, f"HELP:SU:{doc}") for doc in shutUpDocs]
-shutupDocsButtons = common.makeButtons(
+shutupDocsButtons = common.partition(
     shutupDocsButtons, 3) + [[types.InlineKeyboardButton("See userbot docs", f"CHDOC:UB")]]
 
 
