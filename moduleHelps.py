@@ -8,14 +8,9 @@ import bots.shutUp.shutup as SU
 import common
 import DBManagement as DB
 
-userBotDocs = {}
-shutUpDocs = {}
-# for i in UB.modules.allFiles:
-#    userBotDocs[i] = eval(f"UB.{i}.__doc__")
-# for i in SU.modules.allFiles:
-#     shutUpDocs[i] = eval(f"SU.{i}.__doc__")
-
-shutupDocs = {i.name:ast.get_docstring(ast.parse(i.read_text())) for i in Path(
+userBotDocs = {i.stem: ast.get_docstring(ast.parse(i.read_text())) for i in Path(
+    "bots/userBot/modules").iterdir() if i.is_file()}
+shutUpDocs = {i.stem: ast.get_docstring(ast.parse(i.read_text())) for i in Path(
     "bots/shutUp/modules").iterdir() if i.is_file()}
 
 userBotDocsButtons = [types.InlineKeyboardButton(
