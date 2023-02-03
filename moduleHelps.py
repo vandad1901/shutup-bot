@@ -1,6 +1,9 @@
+import ast
+from pathlib import Path
+
 from pyrogram import emoji, filters, types
 
-import bots.shutUp as SU
+import bots.shutUp.shutup as SU
 # import bots.userBot as UB
 import common
 import DBManagement as DB
@@ -9,9 +12,11 @@ userBotDocs = {}
 shutUpDocs = {}
 # for i in UB.modules.allFiles:
 #    userBotDocs[i] = eval(f"UB.{i}.__doc__")
-for i in SU.modules.allFiles:
-    shutUpDocs[i] = eval(f"SU.{i}.__doc__")
+# for i in SU.modules.allFiles:
+#     shutUpDocs[i] = eval(f"SU.{i}.__doc__")
 
+shutupDocs = {i.name:ast.get_docstring(ast.parse(i.read_text())) for i in Path(
+    "bots/shutUp/modules").iterdir() if i.is_file()}
 
 userBotDocsButtons = [types.InlineKeyboardButton(
     doc, f"HELP:UB:{doc}") for doc in userBotDocs]

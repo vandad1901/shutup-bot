@@ -4,15 +4,13 @@ Replies a custom gif to you or the message you replied to
 Usage:
 **/fuckyou**
 """
-from pyrogram import filters
+from pyrogram import Client, filters
 
 import DBManagement as DB
 from common import bot_username, isModuleToggledFilter
 
-from ..shutup import app
 
-
-@app.on_message(filters.command(["fuckyou", f"fuckyou@{bot_username}"]) & isModuleToggledFilter("fuckyou"))
+@Client.on_message(filters.command(["fuckyou", f"fuckyou@{bot_username}"]) & isModuleToggledFilter("fuckyou"))
 async def fuckYou(client, message):
     try:
         anId = DB.animations.getLatest()["animation_id"]

@@ -4,14 +4,12 @@ Deletes the command and says the command argument
 Usage:
 **/say**
 """
-from pyrogram import filters
+from pyrogram import Client, filters
 
 from common import bot_username, isModuleToggledFilter
 
-from ..shutup import app
 
-
-@app.on_message(filters.command(["say", f"say@{bot_username}"]) & isModuleToggledFilter("say"))
+@Client.on_message(filters.command(["say", f"say@{bot_username}"]) & isModuleToggledFilter("say"))
 async def say(client, message):
     try:
         await message.delete()

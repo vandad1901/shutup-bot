@@ -9,11 +9,9 @@ import sys
 import traceback
 from io import StringIO
 
-from pyrogram import emoji, filters, types
+from pyrogram import Client, emoji, filters, types
 
 from common import bot_username, isModuleToggledFilter, owner_id
-
-from ..shutup import app
 
 
 async def aexec(code, client, message):
@@ -24,7 +22,7 @@ async def aexec(code, client, message):
     return await locals()['__aexec'](client, message)
 
 
-@app.on_message(filters.command(["eval", f"eval@{bot_username}"]) & isModuleToggledFilter("eval"))
+@Client.on_message(filters.command(["eval", f"eval@{bot_username}"]) & isModuleToggledFilter("eval"))
 async def evaluate(client, message, authorized=False):
     if (message.from_user.id == owner_id or authorized):
         status_message = await message.reply_text("`Running ...`")
@@ -77,7 +75,7 @@ async def evaluate(client, message, authorized=False):
         await message.reply_text(f"Not a SUDO user\n{(await app.get_users(owner_id)).mention}", reply_markup=types.InlineKeyboardMarkup([[types.InlineKeyboardButton(f"Deny {emoji.CROSS_MARK}", "EVAL:DENY"), types.InlineKeyboardButton(f"Allow {emoji.CHECK_MARK_BUTTON}", "EVAL:ALLOW")]]))
 
 
-@app.on_callback_query(filters.regex("^EVAL"))
+@Client.on_callback_query(filters.regex("^EVAL"))
 async def authorizeEval(client, callback_query):
     if (callback_query.from_user.id == owner_id):
         if (callback_query.data == "EVAL:DENY"):
