@@ -30,7 +30,7 @@ timePeriods = {"overall": pylast.PERIOD_OVERALL, "week": pylast.PERIOD_7DAYS, "m
 
 @app.on_message(filters.command(["lastfm", f"lastfm@{bot_username}"]))
 async def getLastFMScrobbles(client, message):
-    lastFMName = DB.users.get(str(message.from_user.id))["lastfm"]
+    lastFMName = DB.users.get(message.from_user.id)["lastfm"]
     if (not lastFMName):
         await message.reply_text("Set your last.fm username with /setlastfm")
         return
@@ -53,7 +53,7 @@ async def getLastFMScrobbles(client, message):
 
 @app.on_message(filters.command(["lastfm_top", f"lastfm_top@{bot_username}"]))
 async def getLastFMTops(client, message):
-    lastFMName = DB.users.get(str(message.from_user.id))["lastfm"]
+    lastFMName = DB.users.get(message.from_user.id)["lastfm"]
     if (not lastFMName):
         await message.reply_text("Set your last.fm username with /setlastfm")
         return
