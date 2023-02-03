@@ -14,7 +14,7 @@ from anilistpy import (Anime, Character, Manga, animeSearch, charSearch,
                        mangaSearch)
 from pyrogram import emoji, filters, types
 
-from common import bot_username, makeButtons
+from common import bot_username, partition
 
 from ..shutup import app
 
@@ -26,7 +26,7 @@ async def getAnimeSearch(client, message):
         return
     query = " ".join(message.command[1:])
     result = animeSearch(query)
-    await message.reply_photo("https://anilist.co/img/icons/android-chrome-512x512.png", "Select anime", reply_markup=types.InlineKeyboardMarkup(makeButtons([types.InlineKeyboardButton(anime["title"]["romaji"], f"ANI:{anime['id']}") for anime in result.media], 1)))
+    await message.reply_photo("https://anilist.co/img/icons/android-chrome-512x512.png", "Select anime", reply_markup=types.InlineKeyboardMarkup(partition([types.InlineKeyboardButton(anime["title"]["romaji"], f"ANI:{anime['id']}") for anime in result.media], 1)))
 
 
 @app.on_message(filters.command(["manga", f"manga@{bot_username}"]))
@@ -36,7 +36,7 @@ async def getMangaSearch(client, message):
         return
     query = " ".join(message.command[1:])
     result = mangaSearch(query)
-    await message.reply_photo("https://anilist.co/img/icons/android-chrome-512x512.png", "Select manga", reply_markup=types.InlineKeyboardMarkup(makeButtons([types.InlineKeyboardButton(manga["title"]["romaji"], f"MANGA:{manga['id']}") for manga in result.media], 1)))
+    await message.reply_photo("https://anilist.co/img/icons/android-chrome-512x512.png", "Select manga", reply_markup=types.InlineKeyboardMarkup(partition([types.InlineKeyboardButton(manga["title"]["romaji"], f"MANGA:{manga['id']}") for manga in result.media], 1)))
 
 
 @app.on_message(filters.command(["character", f"character@{bot_username}"]))
@@ -46,7 +46,7 @@ async def getCharacterSearch(client, message):
         return
     query = " ".join(message.command[1:])
     result = charSearch(query)
-    await message.reply_photo("https://anilist.co/img/icons/android-chrome-512x512.png", "Select character", reply_markup=types.InlineKeyboardMarkup(makeButtons([types.InlineKeyboardButton(character["name"]["full"], f"CHR:{character['id']}") for character in result.media], 1)))
+    await message.reply_photo("https://anilist.co/img/icons/android-chrome-512x512.png", "Select character", reply_markup=types.InlineKeyboardMarkup(partition([types.InlineKeyboardButton(character["name"]["full"], f"CHR:{character['id']}") for character in result.media], 1)))
 
 
 @app.on_callback_query(filters.regex("ANI"))

@@ -1,10 +1,14 @@
 import asyncio
 from functools import partial, wraps
 from itertools import repeat
+from math import ceil
 from os import environ
+from typing import Iterator, Union, Callable, Awaitable, Any
 
 import dotenv
 from pyrogram import filters
+from pyrogram.filters import Filter
+from pyrogram.types import User
 
 import DBManagement as DB
 
@@ -25,7 +29,7 @@ lastfm_user = environ["LASTFM_USER"]
 lastfm_pass = environ["LASTFM_PASS"]
 
 
-def async_wrap(func):
+def async_wrap(func) -> Callable[..., Awaitable[Any]]:
     @wraps(func)
     async def run(*args, loop=None, executor=None, **kwargs):
         if loop is None:
@@ -35,7 +39,7 @@ def async_wrap(func):
     return run
 
 
-def isModuleToggled(chatId, moduleName):
+def isModuleToggled(chatId, moduleName) -> bool:
     toggles = DB.groups.get(chatId)["commands"]
     try:
         return toggles.get(moduleName, True)
@@ -43,32 +47,28 @@ def isModuleToggled(chatId, moduleName):
         return True
 
 
-def isModuleToggledFilter(moduleName):
+def isModuleToggledFilter(moduleName: str) -> Filter:
     def func(flt, _, query):
         return isModuleToggled(query.chat.id, flt.moduleName)
     return filters.create(func, moduleName=moduleName)
 
 
-def makeButtons(buttons, buttonTable):
-    if (isinstance(buttonTable, int)):
-        buttonTable = list(repeat(buttonTable, len(buttons)//buttonTable+1))
-    buttons = iter(buttons)
-    Table = []
-    try:
-        for i in range(len(buttonTable)):
-            Table.append([])
-            for _ in range(buttonTable[i]):
-                Table[i].append(next(buttons))
-        return Table
-    except StopIteration:
-        if (Table[-1] == []):
-            Table.pop()
-        return Table
+def partitionGenerator(items: list[Any], partitonTable: Union[int, list[int]]) -> Iterator[list[Any]]:
+    if (isinstance(partitonTable, int)):
+        partitonTable = list(
+            repeat(partitonTable, ceil(len(items)/partitonTable)))
+    for i in range(len(partitonTable)):
+        beginning = sum(partitonTable[:i])
+        yield items[beginning:beginning+partitonTable[i]]
 
 
-def getFullName(user):
+def partition(items: list[Any], partitonTable: Union[int, list[int]]) -> list[Any]:
+    return list(partitionGenerator(items, partitonTable))
+
+
+def getFullName(user: User) -> str:
     return f"{user.first_name} {user.last_name}".strip()
 
 
-def ordinal(n): return "%d%s" % (
-    n, "tsnrhtdd"[(n//10 % 10 != 1)*(n % 10 < 4)*n % 10::4])
+def ordinal(n: int) -> str:
+    return f"{n}{'tsnrhtdd'[(n//10 % 10 != 1)*(n % 10 < 4)*n % 10::4]}"
