@@ -39,7 +39,7 @@ def async_wrap(func) -> Callable[..., Awaitable[Any]]:
     return run
 
 
-def isModuleToggled(chatId, moduleName) -> bool:
+def isModuleToggled(chatId: int, moduleName: str) -> bool:
     toggles = DB.groups.get(chatId)["commands"]
     try:
         return toggles.get(moduleName, True)
