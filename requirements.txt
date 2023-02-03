@@ -1,10 +1,10 @@
-pymongo==4.3.3
-Pyrogram==2.0.97
+requests==2.28.2
 Pillow==9.4.0
 python-dotenv==0.21.1
-psycopg2-binary==2.9.5
+pymongo==4.3.3
+Pyrogram==2.0.97
+uvloop==0.17.0
 TgCrypto==1.2.5
 pylast==5.1.0
 anilistpy==0.0.5.2
-requests==2.28.2
 yt-dlp==2023.1.6
