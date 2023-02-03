@@ -98,10 +98,10 @@ class users():
 class animations():
     @staticmethod
     def add(animation_id: str) -> None:
-        database.users.update_one(filter={"animation_id": animation_id},
-                                  update={"$setOnInsert": {
-                                      "insert_date": datetime.utcnow()}},
-                                  upsert=True)
+        database.animations.update_one(filter={"animation_id": animation_id},
+                                       update={"$setOnInsert": {
+                                           "insert_date": datetime.utcnow()}},
+                                       upsert=True)
 
     @staticmethod
     def get() -> list:
