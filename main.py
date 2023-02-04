@@ -5,9 +5,9 @@ import uvloop
 from pyrogram import filters
 from pyrogram.sync import idle
 
+import DBManagement as DB
 import bots.shutUp.shutup as SU
 import common
-import DBManagement as DB
 import moduleHelps
 import webManager
 
