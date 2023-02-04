@@ -1,18 +1,17 @@
 import asyncio
 import time
-import uvloop
-from pyrogram.sync import idle
-from pyrogram import filters
 
-import DBManagement as DB
-import common
+import uvloop
+from pyrogram import filters
+from pyrogram.sync import idle
+
 import bots.shutUp.shutup as SU
+import common
+import DBManagement as DB
 import moduleHelps
 import webManager
-from webManager import awake
-if (common.replit_url is not None):
-    webManager.awake(common.replit_url)
 
+webManager.awake(common.replit_url)
 apps = [SU.app]
 
 for app in apps:
