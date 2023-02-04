@@ -24,7 +24,7 @@ async def stickerize(client, message):
             img = img.resize((512, (512*h)//w))
         else:
             img = img.resize(((512*w)//h, 512))
-        imgName = f"temp_{message.reply_to_message.chat.id}_{message.reply_to_message.message_id}"
+        imgName = f"temp_{message.reply_to_message.chat.id}_{message.reply_to_message.id}"
         img.save(f"{imgName}.webp", "webp")
         img.save(f"{imgName}.png", "webp")
         await message.reply_document(f"{imgName}.webp")

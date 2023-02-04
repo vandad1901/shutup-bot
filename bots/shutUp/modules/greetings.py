@@ -25,7 +25,7 @@ async def welcome(client, message):
         if (not welcomeMessage):
             return
         welcomeMessage._client = client
-        await welcomeMessage.copy(message.chat.id, reply_to_message_id=message.message_id)
+        await welcomeMessage.copy(message.chat.id, reply_to_message_id=message.id)
 
 
 @Client.on_message(filters.left_chat_member & isModuleToggledFilter("greetings"))
@@ -37,7 +37,7 @@ async def goodbye(client, message):
         if (not byeMessage):
             return
         byeMessage._client = client
-        await byeMessage.copy(message.chat.id, reply_to_message_id=message.message_id)
+        await byeMessage.copy(message.chat.id, reply_to_message_id=message.id)
 
 
 @Client.on_message(filters.command(["setwelcome", f"setwelcome@{bot_username}"]) & filters.group & isModuleToggledFilter("greetings"))
