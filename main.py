@@ -1,28 +1,35 @@
 import asyncio
-import time
 
 import uvloop
-from pyrogram import filters
 from pyrogram.sync import idle
-
-import DBManagement as DB
-import bots.shutUp.shutup as SU
-import common
-import moduleHelps
+from pyrogram.client import Client
+import DBManagement
+from common import api_id, api_hash, bot_token, owner_id, replit_url
 import webManager
 
-webManager.awake(common.replit_url)
-apps = [SU.app]
+webManager.awake(replit_url)
 
-for app in apps:
-    app.start()
-SU.app.send_message(common.owner_id, "Starting")
-print("Starting")
 
-idle()
+async def main():
+    apps = [Client("shutupbot",
+                   api_id=api_id,
+                   api_hash=api_hash,
+                   bot_token=bot_token,
+                   plugins=dict(root="bots.shutUp.modules"))
+            ]
 
-SU.app.send_message(common.owner_id, "Stopping")
-print("Stopping")
-# print(UB.usr.export_session_string())
-for app in apps:
-    app.stop()
+    for app in apps:
+        await app.start()
+    await apps[0].send_message(owner_id, "Starting")
+    print("Starting")
+
+    await idle()
+
+    await apps[0].send_message(owner_id, "Stopping")
+    print("Stopping")
+    # print(UB.usr.export_session_string())
+    for app in apps:
+        await app.stop()
+
+uvloop.install()
+asyncio.run(main())

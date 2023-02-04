@@ -1,10 +1,13 @@
+"""
+Shows this message
+"""
+
 import ast
 from pathlib import Path
 
 from pyrogram import emoji, filters, types
+from pyrogram.client import Client
 
-import bots.shutUp.shutup as SU
-# import bots.userBot as UB
 import common
 import DBManagement as DB
 
@@ -24,7 +27,7 @@ shutupDocsButtons = common.partition(
     shutupDocsButtons, 3) + [[types.InlineKeyboardButton("See userbot docs", f"CHDOC:UB")]]
 
 
-@SU.app.on_message(filters.command(["toggle"]))
+@Client.on_message(filters.command(["toggle"]))
 async def toggleCommand(client, message):
     if (len(message.command) == 3):
         if (message.command[2] in userBotDocs | shutUpDocs):
@@ -41,13 +44,13 @@ async def toggleCommand(client, message):
         await message.reply_text("Usage:\n/toggle group_id command")
 
 
-@SU.app.on_message(filters.command(["help", f"help@{common.bot_username}"]))
+@Client.on_message(filters.command(["help", f"help@{common.bot_username}"]))
 async def help(client, message):
     await message.reply_text(
         "**Shutup** modules\n\nChoose the module you want help with and or want to enable/disable", reply_markup=types.InlineKeyboardMarkup(shutupDocsButtons))
 
 
-@SU.app.on_callback_query(filters.regex("^HELP"))
+@Client.on_callback_query(filters.regex("^HELP"))
 async def helpCallbackAnswer(client, callback_query):
     args = callback_query.data.split(":")
     if (args[1] == "SU"):
@@ -60,7 +63,7 @@ async def helpCallbackAnswer(client, callback_query):
         await callback_query.message.edit(userBotDocs[args[2]], reply_markup=types.InlineKeyboardMarkup(buttons))
 
 
-@SU.app.on_callback_query(filters.regex("^CHDOC"))
+@Client.on_callback_query(filters.regex("^CHDOC"))
 async def chdocCallbackAnswer(client, callback_query):
     args = callback_query.data.split(":")
     if (args[1] == "SU"):
@@ -71,7 +74,7 @@ async def chdocCallbackAnswer(client, callback_query):
             "**userbot** modules\n\nChoose the module you want help with and or want to enable/disable", reply_markup=types.InlineKeyboardMarkup(userBotDocsButtons))
 
 
-@SU.app.on_callback_query(filters.regex("^TOGGLE"))
+@Client.on_callback_query(filters.regex("^TOGGLE"))
 async def toggleCallbackAnswer(client, callback_query):
     args = callback_query.data.split(":")
     markup = callback_query.message.reply_markup.inline_keyboard
