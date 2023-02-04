@@ -1,10 +1,12 @@
-from flask import Flask
-from threading import Thread
 import random
 import time
+from threading import Thread
+
 import requests
+from flask import Flask
 
 app = Flask(__name__)
+
 
 @app.route("/")
 def home():
@@ -17,15 +19,16 @@ def run():
 
 def ping(target, debug):
     while True:
+        time.sleep(random.randint(15*60, 30*60))
         r = requests.get(target)
         if debug == True:
             print("Status Code: " + str(r.status_code))
-        time.sleep(random.randint(15*60, 30*60))
 
 
-def awake(target, debug=False):
+def awake(target=None, debug=False):
     app.logger.disabled = True
     t = Thread(target=run)
-    r = Thread(target=ping, args=(target, debug))
     t.start()
-    r.start()
+    if (target is not None):
+        r = Thread(target=ping, args=(target, debug))
+        r.start()
