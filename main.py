@@ -8,7 +8,7 @@ import DBManagement as DB
 import common
 import bots.shutUp.shutup as SU
 import moduleHelps
-
+import webManager
 
 apps = [SU.app]
 
