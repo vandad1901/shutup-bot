@@ -36,7 +36,7 @@ def unpin(client, message):
             message.reply_text(
                 "You do know that you can just TOUCH THE GODDAMN MESSAGE AND SELECT \"UNPIN MESSAGE\" to pin a message right? Lazy ass millennials")
         else:
-            app.unpin_chat_message(message.chat.id, app.get_chat(
-                message.chat.id).pinned_message.message_id)
+            client.unpin_chat_message(message.chat.id, client.get_chat(
+                message.chat.id).pinned_message.id)
     else:
         message.reply_text("I don't have permission to unpin messages here")
