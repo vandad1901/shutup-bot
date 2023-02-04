@@ -9,6 +9,9 @@ import common
 import bots.shutUp.shutup as SU
 import moduleHelps
 import webManager
+from webManager import awake
+if (common.replit_url is not None):
+    webManager.awake(common.replit_url)
 
 apps = [SU.app]
 
