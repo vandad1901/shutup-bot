@@ -22,7 +22,7 @@ owner_id = int(environ["OWNER_ID"])
 aux_user = ""
 
 database_url = environ["DATABASE_URL"]
-
+replit_url = environ.get("REPLIT_URL")
 lastfm_key = environ["LASTFM_KEY"]
 lastfm_secret = environ["LASTFM_SECRET"]
 lastfm_user = environ["LASTFM_USER"]

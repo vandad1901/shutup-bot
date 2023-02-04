@@ -3,7 +3,6 @@ from threading import Thread
 import random
 import time
 import requests
-import logging
 
 app = Flask(__name__)
 
@@ -25,16 +24,8 @@ def ping(target, debug):
 
 
 def awake(target, debug=False):
-    log = logging.getLogger("keep alive")
-    log.disabled = True
     app.logger.disabled = True
     t = Thread(target=run)
-    r = Thread(
-        target=ping,
-        args=(
-            target,
-            debug,
-        ),
-    )
+    r = Thread(target=ping, args=(target, debug))
     t.start()
     r.start()
