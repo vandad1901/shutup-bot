@@ -67,7 +67,7 @@ def partition(items: list[Any], partitonTable: Union[int, list[int]]) -> list[An
 
 
 def getFullName(user: User) -> str:
-    return f"{user.first_name} {user.last_name}".strip()
+    return f"{user.first_name} {user.last_name if user.last_name is not None else ''}".strip()
 
 
 def ordinal(n: int) -> str:
