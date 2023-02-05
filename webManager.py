@@ -4,7 +4,7 @@ import time
 from threading import Thread
 
 import requests
-from flask import Flask
+from flask import Flask, render_template
 
 app = Flask(__name__)
 
@@ -12,6 +12,11 @@ app = Flask(__name__)
 @app.route("/")
 def home():
     return "You have found the home of a Python program!"
+
+
+@app.route("/bingus")
+def bingus():
+    return render_template("bingus.html")
 
 
 def run():
