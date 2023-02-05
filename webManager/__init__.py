@@ -6,7 +6,7 @@ from threading import Thread
 import requests
 from flask import Flask, render_template
 
-app = Flask(__name__, root_path="flaskStuff")
+app = Flask(__name__)
 
 
 @app.route("/")
@@ -40,3 +40,7 @@ def awake(target=None, debug=False):
     if (target is not None):
         r = Thread(target=ping, args=(target, debug))
         r.start()
+
+
+if (__name__ == "__main__"):
+    run()
