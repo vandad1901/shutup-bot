@@ -1,3 +1,4 @@
+import logging
 import random
 import time
 from threading import Thread
@@ -18,15 +19,17 @@ def run():
 
 
 def ping(target, debug):
+    print(f"Starting keep-alive service for {target}")
     while True:
-        time.sleep(random.randint(15*60, 30*60))
+        time.sleep(random.randint(10*60, 15*60))
         r = requests.get(target)
         if debug == True:
-            print("Status Code: " + str(r.status_code))
+            print(f"Status Code: {r.status_code}")
 
 
 def awake(target=None, debug=False):
     app.logger.disabled = True
+    logging.getLogger("werkzeug").disabled = True
     t = Thread(target=run)
     t.start()
     if (target is not None):
