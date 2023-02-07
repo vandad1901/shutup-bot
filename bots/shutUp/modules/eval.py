@@ -11,17 +11,17 @@ from io import StringIO
 
 from pyrogram import emoji, filters, types
 from pyrogram.client import Client
-from pyrogram.types import CallbackQuery, Message
+from pyrogram.types import CallbackQuery, Message, User
 
 from common import bot_username, isModuleToggledFilter, owner_id
 
 
-async def aexec(code: str, client: Client, message: Message):
+async def asyncExecute(code: str, client: Client, message: Message):
     exec(
-        f'async def __aexec(client, message): ' +
+        f'async def __asyncExecute(client, message): ' +
         ''.join(f'\n {l}' for l in code.split('\n'))
     )
-    return await locals()['__aexec'](client, message)
+    return await locals()['__asyncExecute'](client, message)
 
 
 @Client.on_message(filters.command(["eval", f"eval@{bot_username}"]) & isModuleToggledFilter("eval"))
@@ -42,7 +42,7 @@ async def evaluate(client: Client, message: Message, authorized: bool = False):
         redirected_error = sys.stderr = StringIO()
         stdout, stderr, exc = None, None, None
         try:
-            await aexec(cmd, client, message)
+            await asyncExecute(cmd, client, message)
         except Exception:
             exc = traceback.format_exc()
         stdout = redirected_output.getvalue()
@@ -74,7 +74,9 @@ async def evaluate(client: Client, message: Message, authorized: bool = False):
         else:
             await status_message.edit(final_output)
     else:
-        await message.reply_text(f"Not a SUDO user\n{(await app.get_users(owner_id)).mention}", reply_markup=types.InlineKeyboardMarkup([[types.InlineKeyboardButton(f"Deny {emoji.CROSS_MARK}", "EVAL:DENY"), types.InlineKeyboardButton(f"Allow {emoji.CHECK_MARK_BUTTON}", "EVAL:ALLOW")]]))
+        user = await client.get_users(owner_id)
+        assert (isinstance(user, User))
+        await message.reply_text(f"Not a SUDO user\n{user.mention}", reply_markup=types.InlineKeyboardMarkup([[types.InlineKeyboardButton(f"Deny {emoji.CROSS_MARK}", "EVAL:DENY"), types.InlineKeyboardButton(f"Allow {emoji.CHECK_MARK_BUTTON}", "EVAL:ALLOW")]]))
 
 
 @Client.on_callback_query(filters.regex("^EVAL"))

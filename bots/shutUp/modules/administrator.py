@@ -37,4 +37,4 @@ async def dumpStuff(client: Client, message: Message):
 async def newId(client: Client, message: Message):
     userId = message.from_user.id
     if (DB.users.add(userId)):
-        print(DB.users.get())
+        print(DB.users.get_all())

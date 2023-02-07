@@ -59,11 +59,12 @@ async def helpCallbackAnswer(client: Client, callback_query: CallbackQuery):
     if (args[1] == "SU"):
         buttons = [[types.InlineKeyboardButton(
             f"The module is {emoji.CHECK_MARK_BUTTON if common.isModuleToggled(callback_query.message.chat.id, args[2]) else emoji.CROSS_MARK}", f"TOGGLE:SU:{args[2]}")], [types.InlineKeyboardButton("Back", "CHDOC:SU")]]
-        await callback_query.message.edit(shutUpDocs[args[2]], reply_markup=types.InlineKeyboardMarkup(buttons))
+        await callback_query.message.edit(shutUpDocs.get(args[2]) or "", reply_markup=types.InlineKeyboardMarkup(buttons))
     elif (args[1] == "UB"):
         buttons = [[types.InlineKeyboardButton(
             f"The module is {emoji.CHECK_MARK_BUTTON if common.isModuleToggled(callback_query.message.chat.id, args[2]) else emoji.CROSS_MARK}", f"TOGGLE:UB:{args[2]}")], [types.InlineKeyboardButton("Back", "CHDOC:UB")]]
-        await callback_query.message.edit(userBotDocs[args[2]], reply_markup=types.InlineKeyboardMarkup(buttons))
+
+        await callback_query.message.edit(userBotDocs[args[2]] or "", reply_markup=types.InlineKeyboardMarkup(buttons))
 
 
 @Client.on_callback_query(filters.regex("^CHDOC"))
@@ -82,6 +83,8 @@ async def chdocCallbackAnswer(client: Client, callback_query: CallbackQuery):
 async def toggleCallbackAnswer(client: Client, callback_query: CallbackQuery):
     assert (isinstance(callback_query.data, str))
     args = callback_query.data.split(":")
+    assert (isinstance(callback_query.message.reply_markup,
+            types.InlineKeyboardMarkup))
     markup = callback_query.message.reply_markup.inline_keyboard
     if (args[1] == "SU"):
         if (callback_query.from_user.id == common.owner_id or (await callback_query.message.chat.get_member(callback_query.message.from_user.id)).status == "creator"):

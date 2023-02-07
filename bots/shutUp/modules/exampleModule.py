@@ -23,7 +23,7 @@ async def exampleCommandFunc(client: Client, message: Message):
     pass
 
 
-# All callback query data should be all capitalized every "argument" for the callback query should be seperated by ":". e.g STUFF:DELETE:SOMEGROUP
+# All callback query data should be all capitalized every "argument" for the callback query should be separated by ":". e.g STUFF:DELETE:SOMEGROUP
 @Client.on_callback_query(filters.regex("^STUFF"))
 # Name the arguments "client" and "callback_query"
 async def exampleCallbackQueryFunc(client: Client, callback_query: CallbackQuery):

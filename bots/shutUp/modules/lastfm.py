@@ -42,11 +42,11 @@ async def getLastFMScrobbles(client: Client, message: Message):
         return
 
     if (nowPlaying):
-        await message.reply_text(f"{message.from_user.first_name} is currently listening to:\n• **{nowPlaying.artist} - {nowPlaying.title}** {emoji.RED_HEART if nowPlaying.get_userloved() else emoji.BLACK_HEART}({ordinal(len(user.get_track_scrobbles(nowPlaying.artist, nowPlaying.title)))} scrobble)\n\nTheir total scrobble count is: {user.get_playcount()}")
+        await message.reply_text(f"{message.from_user.first_name} is currently listening to:\n• **{nowPlaying.artist} - {nowPlaying.title}** {emoji.RED_HEART if nowPlaying.get_userloved() else emoji.BLACK_HEART}({ordinal(len(list(user.get_track_scrobbles(nowPlaying.artist, nowPlaying.title))))} scrobble)\n\nTheir total scrobble count is: {user.get_playcount()}")
     else:
         recentPlaying = user.get_recent_tracks(limit=3)
         if (recentPlaying):
-            await message.reply_text(f"{message.from_user.first_name} is not currently listening to anything. But recently they've been listening to:\n{chr(10).join([f'• **{s.track.artist} - {s.track.title}** {emoji.RED_HEART if s.track.get_userloved() else emoji.BLACK_HEART}({ordinal(len(user.get_track_scrobbles(s.track.artist, s.track.title)))})' for s in recentPlaying])}\n\nTheir total scrobble count is: {user.get_playcount()}")
+            await message.reply_text(f"{message.from_user.first_name} is not currently listening to anything. But recently they've been listening to:\n{chr(10).join([f'• **{s.track.artist} - {s.track.title}** {emoji.RED_HEART if s.track.get_userloved() else emoji.BLACK_HEART}({ordinal(len(list(user.get_track_scrobbles(s.track.artist, s.track.title))))})' for s in recentPlaying])}\n\nTheir total scrobble count is: {user.get_playcount()}")
         else:
             await message.reply_text(f"{message.from_user.first_name} has never scrobbled any songs")
 
