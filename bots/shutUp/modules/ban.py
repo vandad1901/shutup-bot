@@ -14,7 +14,7 @@ from datetime import datetime, timedelta
 
 from pyrogram import errors, filters
 from pyrogram.client import Client
-from pyrogram.types import Message
+from pyrogram.types import Message, User
 
 from common import bot_username, getFullName, owner_id
 
@@ -44,7 +44,9 @@ async def kick(client: Client, message: Message):
         await message.reply_text("This user is an admin")
         return
     await message.chat.unban_member(effectiveId)
-    await message.reply_text(f"Kicked {getFullName(await client.get_users(effectiveId))}")
+    user = await client.get_users(effectiveId)
+    assert (isinstance(user, User))
+    await message.reply_text(f"Kicked {getFullName(user)}")
 
 
 @Client.on_message(filters.command(["ban", f"ban@{bot_username}"]))
@@ -68,12 +70,16 @@ async def ban(client: Client, message: Message):
         durationStr = message.command[-1]
         untilTime += timedelta(**
                                {timePeriods[durationStr[-1]]: int(durationStr[:-1])})
-        msg = f"Banned {getFullName(await client.get_users(effectiveId))} for {durationStr}"
+        user = await client.get_users(effectiveId)
+        assert (isinstance(user, User))
+        msg = f"Banned {getFullName(user)} for {durationStr}"
     except (KeyError, ValueError):
         await message.reply_text("Invalid time duration")
         return
     except IndexError:
-        msg = f"Banned {getFullName(await client.get_users(effectiveId))} forever"
+        user = await client.get_users(effectiveId)
+        assert (isinstance(user, User))
+        msg = f"Banned {getFullName(user)} forever"
     try:
         await message.chat.ban_member(effectiveId, untilTime)
     except errors.exceptions.bad_request_400.UserAdminInvalid:
@@ -99,4 +105,6 @@ async def unban(client: Client, message: Message):
         await message.reply_text("You must have user restricting permissions to use this command")
         return
     await message.chat.unban_member(effectiveId)
-    await message.reply_text(f"Unbanned {getFullName(await client.get_users(effectiveId))}")
+    user = await client.get_users(effectiveId)
+    assert (isinstance(user, User))
+    await message.reply_text(f"Unbanned {getFullName(user)}")

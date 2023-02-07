@@ -25,7 +25,8 @@ async def welcome(client: Client, message: Message):
     elif (any(u.id == owner_id for u in message.new_chat_members)):
         await message.reply("Daddy")
     elif (not all([u.is_self for u in message.new_chat_members])):
-        welcomeMessage = DB.groups.get(message.chat.id)["welcome"]
+        welcomeMessage: Message = eval(
+            DB.groups.get(message.chat.id)["welcome"])
         if (not welcomeMessage):
             return
         welcomeMessage._client = client
@@ -37,8 +38,7 @@ async def goodbye(client: Client, message: Message):
     if (message.left_chat_member.id == owner_id):
         await message.reply("Daddy")
     else:
-        byeMessage = DB.groups.get(message.chat.id)["bye"]
-        cast(byeMessage, Message)
+        byeMessage: Message = eval(DB.groups.get(message.chat.id)["bye"])
         if (not byeMessage):
             return
         byeMessage._client = client

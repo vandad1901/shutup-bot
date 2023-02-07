@@ -12,8 +12,11 @@ from pyrogram.types import Message
 import DBManagement as DB
 from common import bot_username, isModuleToggledFilter, owner_id
 
-isShut = filters.create(lambda _, __, query: bool(
-    DB.groups.get(query.chat.id)["shut"]))
+
+async def func(_, __, query: Message):
+    return bool(DB.groups.get(query.chat.id)["shut"])
+
+isShut = filters.create(func)
 
 
 @Client.on_message(filters.command(["shut", f"shut@{bot_username}"]) & filters.group & isModuleToggledFilter("shut"), group=0)
