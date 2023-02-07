@@ -65,7 +65,7 @@ class groups():
                                    update={"$set": {"welcome": repr(welcome)}})
 
     @staticmethod
-    def setBye(group_id: int, bye: str) -> None:
+    def setBye(group_id: int, bye: Message) -> None:
         database.groups.update_one(filter={"group_id": group_id},
                                    update={"$set": {"bye": repr(bye)}})
 

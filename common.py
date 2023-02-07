@@ -3,12 +3,12 @@ from functools import partial, wraps
 from itertools import repeat
 from math import ceil
 from os import environ
-from typing import Iterator, Union, Callable, Awaitable, Any
+from typing import Any, Awaitable, Callable, Iterator, Union
 
 import dotenv
 from pyrogram import filters
 from pyrogram.filters import Filter
-from pyrogram.types import User
+from pyrogram.types import Chat, User
 
 import DBManagement as DB
 
@@ -66,7 +66,7 @@ def partition(items: list[Any], partitonTable: Union[int, list[int]]) -> list[An
     return list(partitionGenerator(items, partitonTable))
 
 
-def getFullName(user: User) -> str:
+def getFullName(user: User | Chat) -> str:
     return f"{user.first_name} {user.last_name if user.last_name is not None else ''}".strip()
 
 
