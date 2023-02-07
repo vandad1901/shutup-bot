@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import Any, Optional, TypedDict, Union
+from typing import Any, Optional, TypedDict
 
 from pymongo import ASCENDING, DESCENDING, MongoClient
 from pyrogram.types import Message
@@ -33,7 +33,7 @@ class groups():
     def add(group_id: int) -> None:
         database.groups.update_one(filter={"group_id": group_id},
                                    update={"$setOnInsert":
-                                   {"shut": False, "commands": {}, "filters": {}, "welcome": "", "bye": ""}},
+                                           {"shut": False, "commands": {}, "filters": {}, "welcome": "", "bye": ""}},
                                    upsert=True)
 
     @staticmethod
@@ -41,7 +41,7 @@ class groups():
         database.groups.delete_one(filter={"group_id": group_id})
 
     @staticmethod
-    def get(group_id: Optional[int] = None) -> Union[list[Any], Any]:
+    def get(group_id: Optional[int] = None) -> list[Any] | Any:
         if (not group_id):
             return list(database.groups.find())
         else:
@@ -52,12 +52,12 @@ class groups():
     def toggleShut(group_id: int) -> None:
         groups.add(group_id)
         database.groups.update_one(filter={"group_id": group_id},
-                                   update={"$set": {"shut": {"$not": "$shut"}}})
+                                   update=[{"$set": {"shut": {"$not": "$shut"}}}])
 
     @staticmethod
     def toggleCommand(group_id: int, command: str) -> None:
         database.groups.update_one(filter={"group_id": group_id},
-                                   update={"$set": {f"commands.{command}": {"$not": f"$commands.{command}"}}})
+                                   update=[{"$set": {f"commands.{command}": {"$not": {"$ifNull": [f"commands.{command}", True]}}}}])
 
     @staticmethod
     def setWelcome(group_id: int, welcome: Message) -> None:
@@ -82,7 +82,7 @@ class users():
         database.users.delete_one({"user_id": users_id})
 
     @staticmethod
-    def get(user_id: Optional[int] = None) -> Union[list[Any], Any]:
+    def get(user_id: Optional[int] = None) -> list[Any] | Any:
         if (not user_id):
             return list(database.animations.find())
         else:
