@@ -7,6 +7,7 @@ from pathlib import Path
 
 from pyrogram import emoji, filters, types
 from pyrogram.client import Client
+from pyrogram.types import CallbackQuery, Message, Chat
 
 import common
 import DBManagement as DB
@@ -28,15 +29,16 @@ shutupDocsButtons = common.partition(
 
 
 @Client.on_message(filters.command(["toggle"]))
-async def toggleCommand(client, message):
+async def toggleCommand(client: Client, message: Message):
     if (len(message.command) == 3):
         if (message.command[2] in userBotDocs | shutUpDocs):
             DB.groups.toggleCommand(
-                message.command[1], message.command[2])
+                int(message.command[1]), message.command[2])
             chat = await client.get_chat(message.command[2])
+            assert (isinstance(chat, Chat))
             chat = common.getFullName(
-                chat) if chat.type == "private" else chat.title()
-            await message.reply_text(f"Module `{message.command[2]}` in chat `{chat}` is now {f'ON{emoji.CHECK_MARK_BUTTON}' if common.isModuleToggled(message.command[1], message.command[2]) else f'OFF{emoji.CROSS_MARK}'}")
+                chat) if chat.type == "private" else chat.title
+            await message.reply_text(f"Module `{message.command[2]}` in chat `{chat}` is now {f'ON{emoji.CHECK_MARK_BUTTON}' if common.isModuleToggled(int(message.command[1]), message.command[2]) else f'OFF{emoji.CROSS_MARK}'}")
         else:
             await message.reply_text("Invalid command")
     else:
@@ -51,7 +53,8 @@ async def help(client, message):
 
 
 @Client.on_callback_query(filters.regex("^HELP"))
-async def helpCallbackAnswer(client, callback_query):
+async def helpCallbackAnswer(client: Client, callback_query: CallbackQuery):
+    assert (isinstance(callback_query.data, str))
     args = callback_query.data.split(":")
     if (args[1] == "SU"):
         buttons = [[types.InlineKeyboardButton(
@@ -64,7 +67,8 @@ async def helpCallbackAnswer(client, callback_query):
 
 
 @Client.on_callback_query(filters.regex("^CHDOC"))
-async def chdocCallbackAnswer(client, callback_query):
+async def chdocCallbackAnswer(client: Client, callback_query: CallbackQuery):
+    assert (isinstance(callback_query.data, str))
     args = callback_query.data.split(":")
     if (args[1] == "SU"):
         await callback_query.message.edit(
@@ -75,7 +79,8 @@ async def chdocCallbackAnswer(client, callback_query):
 
 
 @Client.on_callback_query(filters.regex("^TOGGLE"))
-async def toggleCallbackAnswer(client, callback_query):
+async def toggleCallbackAnswer(client: Client, callback_query: CallbackQuery):
+    assert (isinstance(callback_query.data, str))
     args = callback_query.data.split(":")
     markup = callback_query.message.reply_markup.inline_keyboard
     if (args[1] == "SU"):

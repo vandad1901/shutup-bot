@@ -12,13 +12,15 @@ import time
 
 from anilistpy import (Anime, Character, Manga, animeSearch, charSearch,
                        mangaSearch)
-from pyrogram import Client, emoji, filters, types
+from pyrogram import emoji, filters, types
+from pyrogram.client import Client
+from pyrogram.types import CallbackQuery, Message
 
 from common import bot_username, partition
 
 
 @Client.on_message(filters.command(["anime", f"anime@{bot_username}"]))
-async def getAnimeSearch(client, message):
+async def getAnimeSearch(client: Client, message: Message):
     if (len(message.command) < 2):
         await message.reply_text('Usage:\n/anime anime name')
         return
@@ -28,7 +30,7 @@ async def getAnimeSearch(client, message):
 
 
 @Client.on_message(filters.command(["manga", f"manga@{bot_username}"]))
-async def getMangaSearch(client, message):
+async def getMangaSearch(client: Client, message: Message):
     if (len(message.command) < 2):
         await message.reply_text('Usage:\n/manga manga name')
         return
@@ -38,7 +40,7 @@ async def getMangaSearch(client, message):
 
 
 @Client.on_message(filters.command(["character", f"character@{bot_username}"]))
-async def getCharacterSearch(client, message):
+async def getCharacterSearch(client: Client, message: Message):
     if (len(message.command) < 2):
         await message.reply_text('Usage:\n/character character name')
         return
@@ -48,7 +50,8 @@ async def getCharacterSearch(client, message):
 
 
 @Client.on_callback_query(filters.regex("ANI"))
-async def getAnime(client, callback_query):
+async def getAnime(client: Client, callback_query: CallbackQuery):
+    assert (isinstance(callback_query.data, str))
     args = callback_query.data.split(":")
     anime = Anime(args[1])
     try:
@@ -82,7 +85,8 @@ f'''{chr(10)}**Duration:** {anime.duration()} minute{'s' if anime.duration()>1 e
 
 
 @Client.on_callback_query(filters.regex("MANGA"))
-async def getManga(client, callback_query):
+async def getManga(client: Client, callback_query: CallbackQuery):
+    assert (isinstance(callback_query.data, str))
     args = callback_query.data.split(":")
     manga = Manga(args[1])
     msg1 = f"""
@@ -103,7 +107,8 @@ async def getManga(client, callback_query):
 
 
 @Client.on_callback_query(filters.regex("CHR"))
-async def getCharacter(client, callback_query):
+async def getCharacter(client: Client, callback_query: CallbackQuery):
+    assert (isinstance(callback_query.data, str))
     args = callback_query.data.split(":")
     character = Character(args[1])
     caption = f"""

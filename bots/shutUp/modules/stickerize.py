@@ -7,16 +7,18 @@ Usage:
 import os
 
 from PIL import Image
-from pyrogram import Client, filters
+from pyrogram import filters
+from pyrogram.client import Client
+from pyrogram.types import Message
 
 from common import bot_username, isModuleToggledFilter
 
 
 @Client.on_message(filters.command(["stickerize", f"stickerize@{bot_username}"]) & isModuleToggledFilter("stickerize"))
-async def stickerize(client, message):
+async def stickerize(client: Client, message: Message):
     if (message.reply_to_message):
-        imgpath = await message.reply_to_message.download()
-        img = Image.open(imgpath)
+        imgPath = await message.reply_to_message.download()
+        img = Image.open(imgPath)
         img.thumbnail((512, 512))
         w, h = img.size
 
@@ -32,7 +34,7 @@ async def stickerize(client, message):
         try:
             os.remove(f"{imgName}.webp")
             os.remove(f"{imgName}.png")
-            os.remove(imgpath)
+            os.remove(imgPath)
         except:
             pass
     else:

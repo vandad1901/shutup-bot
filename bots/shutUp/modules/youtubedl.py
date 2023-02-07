@@ -11,7 +11,9 @@ from pathlib import Path
 
 import yt_dlp as youtube_dl
 from PIL import Image
-from pyrogram import Client, filters
+from pyrogram import filters
+from pyrogram.client import Client
+from pyrogram.types import CallbackQuery, Message
 
 from common import async_wrap, bot_username
 
@@ -28,7 +30,7 @@ class MyLogger():
 
 
 @Client.on_message((filters.command(["youtube", f"youtube@{bot_username}"]) | filters.regex("^(?:https?:\/\/)?(?:www\.)?(?:music\.)?youtu\.?be(?:\.com)?\/?.*(?:watch|embed)?(?:.*v=|v\/|\/)([\w\-_]+)\&?")))
-async def youtubeGetInfo(client, message):
+async def youtubeGetInfo(client: Client, message: Message):
     if (not message.command):
         message.command = ["/youtube"] + message.text.split()
         if (len(message.text.split()) == 1):
@@ -43,6 +45,9 @@ async def youtubeGetInfo(client, message):
         with youtube_dl.YoutubeDL(ydl_opts) as ydl:
             url = message.command[1]
             result = ydl.extract_info(url, download=False)
+            if (result is None):
+                await message.reply_text("Unrecognized link. Please try again")
+                return
             formats = result["formats"]
             highest_qualities = {}
             filtered_formats = [
@@ -72,30 +77,31 @@ async def youtubeGetInfo(client, message):
                 else:
                     raise e
             filename = Path(ydl.prepare_filename(result))
-            thumbname = filename.with_suffix(".webp")
-            with Image.open(thumbname).convert("RGBA") as t:
-                t.thumbnail([320, 320])
+            thumbName = filename.with_suffix(".webp")
+            with Image.open(thumbName).convert("RGBA") as t:
+                t.thumbnail((320, 320))
                 new_image = Image.new("RGBA", t.size, "WHITE")
                 new_image.paste(t, mask=t)
-                new_image.convert("RGB").save(thumbname, "webp")
+                new_image.convert("RGB").save(thumbName, "webp")
             if ("audio only" in result["format"] and "+" not in result["format"]):
                 filename = filename.rename(filename.with_suffix(".m4a"))
                 try:
                     await message.reply_audio(
-                        filename, duration=result["duration"], title=result["track"], performer=result["artist"], thumb=thumbname)
+                        str(filename), duration=result["duration"], title=result["track"], performer=result["artist"], thumb=str(thumbName))
                 except:
                     await message.reply_audio(
-                        filename, duration=result["duration"], title=result["title"], performer=result["uploader"], thumb=thumbname)
+                        str(filename), duration=result["duration"], title=result["title"], performer=result["uploader"], thumb=str(thumbName))
             else:
                 await message.reply_video(
-                    filename, duration=result["duration"], width=result["width"], height=result["height"])
+                    str(filename), duration=result["duration"], width=result["width"], height=result["height"])
             filename.unlink(missing_ok=True)
-            thumbname.unlink(missing_ok=True)
+            thumbName.unlink(missing_ok=True)
     else:
         await message.reply_text('Usage:\n/youtube link\n/youtube link quality')
 
 
 @Client.on_callback_query(filters.regex("^YTDL"))
-async def exampleCallbackQueryFunc(client, callback_query):
+async def exampleCallbackQueryFunc(client: Client, callback_query: CallbackQuery):
+    assert (isinstance(callback_query.data, str))
     args = callback_query.data.split(":")
     pass

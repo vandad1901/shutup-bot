@@ -12,7 +12,9 @@ to set your lastfm username
 import itertools
 
 import pylast
-from pyrogram import Client, emoji, filters
+from pyrogram import emoji, filters
+from pyrogram.client import Client
+from pyrogram.types import Message
 
 import DBManagement as DB
 from common import (bot_username, lastfm_key, lastfm_pass, lastfm_secret,
@@ -27,7 +29,7 @@ timePeriods = {"overall": pylast.PERIOD_OVERALL, "week": pylast.PERIOD_7DAYS, "m
 
 
 @Client.on_message(filters.command(["lastfm", f"lastfm@{bot_username}"]))
-async def getLastFMScrobbles(client, message):
+async def getLastFMScrobbles(client: Client, message: Message):
     lastFMName = DB.users.get(message.from_user.id)["lastfm"]
     if (not lastFMName):
         await message.reply_text("Set your last.fm username with /setlastfm")
@@ -50,7 +52,7 @@ async def getLastFMScrobbles(client, message):
 
 
 @Client.on_message(filters.command(["lastfm_top", f"lastfm_top@{bot_username}"]))
-async def getLastFMTops(client, message):
+async def getLastFMTops(client: Client, message: Message):
     lastFMName = DB.users.get(message.from_user.id)["lastfm"]
     if (not lastFMName):
         await message.reply_text("Set your last.fm username with /setlastfm")
@@ -84,7 +86,7 @@ async def getLastFMTops(client, message):
                 f"**{message.from_user.first_name}**'s top album{'s are' if len(results)>1 else ' is'}:\n{chr(10).join([f'{s[0]}. {s[1].item.artist} - {s[1].item.title}' for s in zip(itertools.count(1), results)])}")
 
         elif (type.startswith("track")):
-            results = user.get_top_tracks(period, limit)
+            results = list(user.get_top_tracks(period, limit))
             await message.reply_text(
                 f"**{message.from_user.first_name}**'s top track{'s are' if len(results)>1 else ' is'}:\n{chr(10).join([f'{s[0]}. {s[1].item.artist} - {s[1].item.title}' for s in zip(itertools.count(1), results)])}")
 
@@ -92,13 +94,12 @@ async def getLastFMTops(client, message):
             results = user.get_top_tags(limit)
             await message.reply_text(
                 f"**{message.from_user.first_name}**'s top tag{'s are' if len(results)>1 else ' is'}:\n{chr(10).join([f'{s[0]}. {s[1].name}' for s in zip(itertools.count(1), results)])}")
-
     except:
         await message.reply_text(f"Something went wrong. Is **{lastFMName}** your username?")
 
 
 @Client.on_message(filters.command(["setlastfm", f"setlastfm@{bot_username}"]))
-async def setLastFMName(client, message):
+async def setLastFMName(client: Client, message: Message):
     if (len(message.command) == 2):
         DB.users.setLastfm(message.from_user.id, message.command[1])
         await message.reply_text(f"Successfully set your lastfm username to {message.command[1]}")
