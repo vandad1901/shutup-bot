@@ -17,15 +17,15 @@ userBotDocs = {i.stem: ast.get_docstring(ast.parse(i.read_text())) for i in Path
 shutUpDocs = {i.stem: ast.get_docstring(ast.parse(i.read_text())) for i in Path(
     "bots/shutUp/modules").iterdir() if i.is_file()}
 
-userBotDocsButtons = [types.InlineKeyboardButton(
+userBotDocsButtonsFlat = [types.InlineKeyboardButton(
     doc, f"HELP:UB:{doc}") for doc in userBotDocs]
 userBotDocsButtons = common.partition(
-    userBotDocsButtons, 3) + [[types.InlineKeyboardButton("See shutup docs", f"CHDOC:SU")]]
+    userBotDocsButtonsFlat, 3) + [[types.InlineKeyboardButton("See shutup docs", f"CHDOC:SU")]]
 
-shutupDocsButtons = [types.InlineKeyboardButton(
+shutupDocsButtonsFlat = [types.InlineKeyboardButton(
     doc, f"HELP:SU:{doc}") for doc in shutUpDocs]
 shutupDocsButtons = common.partition(
-    shutupDocsButtons, 3) + [[types.InlineKeyboardButton("See userbot docs", f"CHDOC:UB")]]
+    shutupDocsButtonsFlat, 3) + [[types.InlineKeyboardButton("See userbot docs", f"CHDOC:UB")]]
 
 
 @Client.on_message(filters.command(["toggle"]))
@@ -36,9 +36,9 @@ async def toggleCommand(client: Client, message: Message):
                 int(message.command[1]), message.command[2])
             chat = await client.get_chat(message.command[2])
             assert (isinstance(chat, Chat))
-            chat = common.getFullName(
+            chatName = common.getFullName(
                 chat) if chat.type == "private" else chat.title
-            await message.reply_text(f"Module `{message.command[2]}` in chat `{chat}` is now {f'ON{emoji.CHECK_MARK_BUTTON}' if common.isModuleToggled(int(message.command[1]), message.command[2]) else f'OFF{emoji.CROSS_MARK}'}")
+            await message.reply_text(f"Module `{message.command[2]}` in chat `{chatName}` is now {f'ON{emoji.CHECK_MARK_BUTTON}' if common.isModuleToggled(int(message.command[1]), message.command[2]) else f'OFF{emoji.CROSS_MARK}'}")
         else:
             await message.reply_text("Invalid command")
     else:
