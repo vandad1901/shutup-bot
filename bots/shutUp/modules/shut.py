@@ -29,8 +29,8 @@ async def shut(client: Client, message: Message):
 
 @Client.on_message(~filters.me & filters.group & isShut & isModuleToggledFilter("shut"), group=0)
 async def deleteIfShut(client: Client, message: Message):
-    print(f"{message.from_user.first_name} broke the shut")
     if (message.from_user.id != owner_id):
+        print(f"{message.from_user.first_name} broke the shut in {message.chat.title}")
         try:
             await message.delete()
         except:
