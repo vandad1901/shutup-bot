@@ -3,7 +3,7 @@ from functools import partial, wraps
 from itertools import repeat
 from math import ceil
 from os import environ
-from typing import Any, Awaitable, Callable, Iterator, Union
+from typing import Any, Awaitable, Callable, Iterator, TypeVar
 
 import dotenv
 from pyrogram import filters
@@ -53,17 +53,20 @@ def isModuleToggledFilter(moduleName: str) -> Filter:
     return filters.create(func, moduleName=moduleName)
 
 
-def partitionGenerator(items: list[Any], partitonTable: Union[int, list[int]]) -> Iterator[list[Any]]:
-    if (isinstance(partitonTable, int)):
-        partitonTable = list(
-            repeat(partitonTable, ceil(len(items)/partitonTable)))
-    for i in range(len(partitonTable)):
-        beginning = sum(partitonTable[:i])
-        yield items[beginning:beginning+partitonTable[i]]
+T = TypeVar("T")
 
 
-def partition(items: list[Any], partitonTable: Union[int, list[int]]) -> list[Any]:
-    return list(partitionGenerator(items, partitonTable))
+def partitionGenerator(items: list[T], partitionTable: int | list[int]) -> Iterator[list[T]]:
+    if (isinstance(partitionTable, int)):
+        partitionTable = list(
+            repeat(partitionTable, ceil(len(items)/partitionTable)))
+    for i in range(len(partitionTable)):
+        beginning = sum(partitionTable[:i])
+        yield items[beginning:beginning+partitionTable[i]]
+
+
+def partition(items: list[T], partitionTable: int | list[int]) -> list[list[T]]:
+    return list(partitionGenerator(items, partitionTable))
 
 
 def getFullName(user: User | Chat) -> str:

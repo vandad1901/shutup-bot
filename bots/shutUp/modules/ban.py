@@ -31,7 +31,7 @@ async def kick(client: Client, message: Message):
         case True, False:
             effectiveId = message.reply_to_message.from_user.id
         case False, True:
-            effectiveId = message.command[1]
+            effectiveId = int(message.command[1])
         case _:
             await message.reply_text("Ambiguous user specified. Reply to the user or have their id as the argument")
             return
@@ -58,7 +58,7 @@ async def ban(client: Client, message: Message):
         case True, False:
             effectiveId = message.reply_to_message.from_user.id
         case False, True:
-            effectiveId = message.command[1]
+            effectiveId = int(message.command[1])
         case _:
             await message.reply_text("No user specified. Reply to the user or have their id as the argument")
             return
@@ -97,7 +97,7 @@ async def unban(client: Client, message: Message):
         case True, False:
             effectiveId = message.reply_to_message.from_user.id
         case False, True:
-            effectiveId = message.command[1]
+            effectiveId = int(message.command[1])
         case _:
             await message.reply_text("No user specified. Reply to the user or have their id as the argument")
             return
