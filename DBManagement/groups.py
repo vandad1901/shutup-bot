@@ -31,7 +31,7 @@ def remove(group_id: int) -> None:
 
 def get(group_id: int) -> GroupsType:
     add(group_id)
-    r = groupsCollection.find_one(filter={"user_id": group_id})
+    r = groupsCollection.find_one(filter={"group_id": group_id})
     assert (r is not None)
     return r
 
@@ -48,7 +48,7 @@ def toggleShut(group_id: int) -> None:
 
 def toggleCommand(group_id: int, command: str) -> None:
     groupsCollection.update_one(filter={"group_id": group_id},
-                                update=[{"$set": {f"commands.{command}": {"$not": {"$ifNull": [f"commands.{command}", True]}}}}])
+                                update=[{"$set": {f"commands.{command}": {"$not": {"$ifNull": [f"$commands.{command}", True]}}}}])
 
 
 def setWelcome(group_id: int, welcome: Message) -> None:
