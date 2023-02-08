@@ -1,4 +1,4 @@
-from typing import TypedDict
+from typing import TypedDict, Optional
 
 from pymongo.collection import Collection
 from pyrogram.types import Message
@@ -9,8 +9,8 @@ from .db import database
 class GroupsType(TypedDict):
     group_id: int
     shut: bool
-    commands: dict
-    filters: dict
+    commands: dict[str, Optional[bool]]
+    filters: dict[str, str]
     welcome: str
     bye: str
 
