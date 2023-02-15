@@ -2,9 +2,9 @@ requests==2.28.2
 Pillow==9.4.0
 python-dotenv==0.21.1
 pymongo==4.3.3
-Pyrogram==2.0.97
+Pyrogram==2.0.99
 uvloop==0.17.0
-flask==2.2.2
+flask==2.2.3
 TgCrypto==1.2.5
 pylast==5.1.0
 anilistpy==0.0.5.2
