@@ -5,9 +5,9 @@ from pyrogram.sync import idle
 from pyrogram.client import Client
 import DBManagement
 from common import api_id, api_hash, bot_token, owner_id, replit_url
-import webManager
+import keepAlive
 
-webManager.awake(replit_url)
+keepAlive.awake(replit_url)
 
 
 async def main():
