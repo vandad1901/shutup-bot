@@ -2,8 +2,7 @@ import asyncio
 import sys
 
 import DBManagement
-import keepAlive
-from common import api_hash, api_id, bot_token, owner_id, replit_url
+from common import api_hash, api_id, bot_token, owner_id
 from pyrogram.client import Client
 from pyrogram.sync import idle
 
@@ -11,8 +10,6 @@ if sys.platform in ('win32', 'cygwin', 'cli'):
     from winloop import install
 else:
     from uvloop import install
-
-keepAlive.awake(replit_url)
 
 
 async def main():
