@@ -8,3 +8,4 @@ TgCrypto==1.2.5
 pylast==5.1.0
 anilistpy==0.0.5.2
 yt-dlp==2023.3.4
+instaloader==4.10
