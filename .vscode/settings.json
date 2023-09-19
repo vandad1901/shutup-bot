@@ -29,7 +29,6 @@
         "uvloop",
         "youtube"
     ],
-    "python.analysis.typeCheckingMode": "basic",
     "cSpell.ignoreWords": [
         "CHDOC",
         "CgADBAADEgcAAqNhEVIQydI7mWvdvBYE",
@@ -40,5 +39,7 @@
         "tsnrhtdd",
         "userloved",
         "youtu"
-    ]
+    ],
+    "python.linting.mypyEnabled": true,
+    "python.linting.enabled": true
 }

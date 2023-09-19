@@ -9,3 +9,4 @@ pylast==5.1.0
 anilistpy==0.0.5.2
 yt-dlp==2023.3.4
 pre-commit==3.4.0
+instaloader==4.10
