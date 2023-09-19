@@ -18,7 +18,7 @@ import common
 import DBManagement as DB
 
 userBotDocs = {
-    i.stem: ast.get_docstring(ast.parse(i.read_text()))
+    i.stem: ast.get_docstring(ast.parse(i.read_text(encoding="utf-8")))
     for i in Path("bots/userBot/modules").iterdir()
     if i.is_file()
 }
