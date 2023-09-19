@@ -2,26 +2,31 @@
 Module for Instagram downloading
 
 Usage:
-**/instagram link** 
+**/instagram link**
 Lists format ids for a link
 **/instagram link quality**
 Downloads the video with the selected quality
 """
+from __future__ import annotations
+
 import re
 import shutil
 from pathlib import Path
 
 import instaloader
-from pyrogram import filters, enums
+from pyrogram import enums
+from pyrogram import filters
 from pyrogram.client import Client
-from pyrogram.types import InputMediaPhoto, InputMediaVideo, Message
+from pyrogram.types import InputMediaPhoto
+from pyrogram.types import InputMediaVideo
+from pyrogram.types import Message
 
 from common import bot_username
 
 L = instaloader.instaloader.Instaloader(quiet=True)
 
 
-@Client.on_message((filters.command(["instagram", f"instagram@{bot_username}"]) | filters.regex("((?:https?:\/\/)?(?:www\.)?instagram\.com\/(?:p|reels?)\/([^/?#&]+)).*")))  # type: ignore
+@Client.on_message(filters.command(["instagram", f"instagram@{bot_username}"]) | filters.regex(r"((?:https?:\/\/)?(?:www\.)?instagram\.com\/(?:p|reels?)\/([^/?#&]+)).*"))  # type: ignore
 async def youtubeGetInfo(_: Client, message: Message) -> None:
     if not message.command:
         message.command = ["/instagram"] + message.text.split()
@@ -38,7 +43,7 @@ async def youtubeGetInfo(_: Client, message: Message) -> None:
         await message.reply_chat_action(
             enums.ChatAction.UPLOAD_VIDEO
             if type(mediaList[0]) == InputMediaVideo
-            else enums.ChatAction.UPLOAD_PHOTO
+            else enums.ChatAction.UPLOAD_PHOTO,
         )
         await message.reply_media_group(mediaList, quote=True)
         await message.reply_chat_action(enums.ChatAction.CANCEL)
@@ -47,7 +52,7 @@ async def youtubeGetInfo(_: Client, message: Message) -> None:
         thumbPath = list(postPath.glob("*.jpg"))[0]
         await message.reply_chat_action(enums.ChatAction.UPLOAD_VIDEO)
         await message.reply_video(
-            str(videoPath), thumb=str(thumbPath), caption=caption, quote=True
+            str(videoPath), thumb=str(thumbPath), caption=caption, quote=True,
         )
         await message.reply_chat_action(enums.ChatAction.CANCEL)
     shutil.rmtree(postPath, ignore_errors=True)
@@ -63,7 +68,7 @@ def downloadFromLink(link: str) -> Path:
 
 def getCaption(postPath: Path) -> str:
     txtFiles = list(postPath.glob("*.txt"))
-    caption = txtFiles[0].read_text() if len(txtFiles) > 0 else ""
+    caption = txtFiles[0].read_text(encoding="utf-8") if len(txtFiles) > 0 else ""
     return caption
 
 
@@ -85,7 +90,7 @@ def makeMediaList(postPath: Path) -> list[InputMediaPhoto | InputMediaVideo]:
     while i < len(rawMediaList):
         if rawMediaList[i].suffix == ".mp4":
             finalMediaList.append(
-                InputMediaVideo(str(rawMediaList[i]), thumb=str(rawMediaList[i + 1]))
+                InputMediaVideo(str(rawMediaList[i]), thumb=str(rawMediaList[i + 1])),
             )
             i += 1
         else:
