@@ -4,17 +4,25 @@ Measures the bot server ping by looking at the difference between message send a
 Usage:
 **/ping**
 """
+from __future__ import annotations
 
 import time
 
 from pyrogram import filters
 from pyrogram.client import Client
-from pyrogram.types import Chat, Message
+from pyrogram.types import Chat
+from pyrogram.types import Message
 
-from common import bot_username, isModuleToggledFilter
+from common import bot_username
+from common import isModuleToggledFilter
 
 
-@Client.on_message(filters.command(["ping", f"ping@{bot_username}"]) & isModuleToggledFilter("ping"))
+@Client.on_message(
+    filters.command(
+        ["ping", f"ping@{bot_username}"],
+    )
+    & isModuleToggledFilter("ping"),
+)
 async def ping(client: Client, message: Message):
     start_time = time.time()
     myMsg = await message.reply_text("Pinging...")

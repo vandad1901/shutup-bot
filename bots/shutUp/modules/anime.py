@@ -8,55 +8,112 @@ Searches Anilist for a manga
 **/character**
 Searches Anilist for a character
 """
+from __future__ import annotations
+
 import time
 
-from anilistpy import (Anime, Character, Manga, animeSearch, charSearch,
-                       mangaSearch)
-from pyrogram import emoji, filters, types
+from anilistpy import Anime
+from anilistpy import animeSearch
+from anilistpy import Character
+from anilistpy import charSearch
+from anilistpy import Manga
+from anilistpy import mangaSearch
+from pyrogram import emoji
+from pyrogram import filters
+from pyrogram import types
 from pyrogram.client import Client
-from pyrogram.types import CallbackQuery, Message
+from pyrogram.types import CallbackQuery
+from pyrogram.types import Message
 
-from common import bot_username, partition
+from common import bot_username
+from common import partition
 
 
 @Client.on_message(filters.command(["anime", f"anime@{bot_username}"]))
 async def getAnimeSearch(client: Client, message: Message):
-    if (len(message.command) < 2):
-        await message.reply_text('Usage:\n/anime anime name')
+    if len(message.command) < 2:
+        await message.reply_text("Usage:\n/anime anime name")
         return
     query = " ".join(message.command[1:])
     result = animeSearch(query)
-    await message.reply_photo("https://anilist.co/img/icons/android-chrome-512x512.png", caption="Select anime", reply_markup=types.InlineKeyboardMarkup(partition([types.InlineKeyboardButton(anime["title"]["romaji"], f"ANI:{anime['id']}") for anime in result.media], 1)))
+    await message.reply_photo(
+        "https://anilist.co/img/icons/android-chrome-512x512.png",
+        caption="Select anime",
+        reply_markup=types.InlineKeyboardMarkup(
+            partition(
+                [
+                    types.InlineKeyboardButton(
+                        anime["title"]["romaji"],
+                        f"ANI:{anime['id']}",
+                    )
+                    for anime in result.media
+                ],
+                1,
+            ),
+        ),
+    )
 
 
 @Client.on_message(filters.command(["manga", f"manga@{bot_username}"]))
 async def getMangaSearch(client: Client, message: Message):
-    if (len(message.command) < 2):
-        await message.reply_text('Usage:\n/manga manga name')
+    if len(message.command) < 2:
+        await message.reply_text("Usage:\n/manga manga name")
         return
     query = " ".join(message.command[1:])
     result = mangaSearch(query)
-    await message.reply_photo("https://anilist.co/img/icons/android-chrome-512x512.png", caption="Select manga", reply_markup=types.InlineKeyboardMarkup(partition([types.InlineKeyboardButton(manga["title"]["romaji"], f"MANGA:{manga['id']}") for manga in result.media], 1)))
+    await message.reply_photo(
+        "https://anilist.co/img/icons/android-chrome-512x512.png",
+        caption="Select manga",
+        reply_markup=types.InlineKeyboardMarkup(
+            partition(
+                [
+                    types.InlineKeyboardButton(
+                        manga["title"]["romaji"],
+                        f"MANGA:{manga['id']}",
+                    )
+                    for manga in result.media
+                ],
+                1,
+            ),
+        ),
+    )
 
 
 @Client.on_message(filters.command(["character", f"character@{bot_username}"]))
 async def getCharacterSearch(client: Client, message: Message):
-    if (len(message.command) < 2):
-        await message.reply_text('Usage:\n/character character name')
+    if len(message.command) < 2:
+        await message.reply_text("Usage:\n/character character name")
         return
     query = " ".join(message.command[1:])
     result = charSearch(query)
-    await message.reply_photo("https://anilist.co/img/icons/android-chrome-512x512.png", caption="Select character", reply_markup=types.InlineKeyboardMarkup(partition([types.InlineKeyboardButton(character["name"]["full"], f"CHR:{character['id']}") for character in result.media], 1)))
+    await message.reply_photo(
+        "https://anilist.co/img/icons/android-chrome-512x512.png",
+        caption="Select character",
+        reply_markup=types.InlineKeyboardMarkup(
+            partition(
+                [
+                    types.InlineKeyboardButton(
+                        character["name"]["full"],
+                        f"CHR:{character['id']}",
+                    )
+                    for character in result.media
+                ],
+                1,
+            ),
+        ),
+    )
 
 
 @Client.on_callback_query(filters.regex("ANI"))
 async def getAnime(client: Client, callback_query: CallbackQuery):
-    assert (isinstance(callback_query.data, str))
+    assert isinstance(callback_query.data, str)
     args = callback_query.data.split(":")
     anime = Anime(args[1])
     try:
         nextEpisode = time.strftime(
-            '%a %Y-%m-%d %H:%M UTC', time.gmtime(int(anime.media[0]["nextAiringEpisode"]["airingAt"])))
+            "%a %Y-%m-%d %H:%M UTC",
+            time.gmtime(int(anime.media[0]["nextAiringEpisode"]["airingAt"])),
+        )
     except:
         nextEpisode = None
     msg1 = f"""
@@ -74,19 +131,40 @@ f'''{chr(10)}**Duration:** {anime.duration()} minute{'s' if anime.duration()>1 e
 **Studios:** {", ".join(anime.studios())}
 **Tags:** {" ".join(["#"+tag.replace(" ","_").replace("-","_") for tag in anime.tags()])}
 """
-    buttons = [types.InlineKeyboardButton(
-        "On Anilist", url=f"https://anilist.co/anime/{anime.media[0]['id']}/")]
+    buttons = [
+        types.InlineKeyboardButton(
+            "On Anilist",
+            url=f"https://anilist.co/anime/{anime.media[0]['id']}/",
+        ),
+    ]
     try:
-        buttons.append(types.InlineKeyboardButton(
-            f"Trailer{emoji.CLAPPER_BOARD}", url=anime.trailerlink()))
+        buttons.append(
+            types.InlineKeyboardButton(
+                f"Trailer{emoji.CLAPPER_BOARD}",
+                url=anime.trailerlink(),
+            ),
+        )
     except:
         pass
-    await callback_query.message.edit_media(types.InputMediaPhoto(anime.coverImage("extraLarge"), (msg1 + anime.description()[:(1019-len(msg1)-len(msg2))]+"...\n"+msg2 if len(msg1+anime.description()+msg2) > 1024 else msg1+anime.description()+msg2)), reply_markup=types.InlineKeyboardMarkup([buttons]))
+    await callback_query.message.edit_media(
+        types.InputMediaPhoto(
+            anime.coverImage("extraLarge"),
+            (
+                msg1
+                + anime.description()[: (1019 - len(msg1) - len(msg2))]
+                + "...\n"
+                + msg2
+                if len(msg1 + anime.description() + msg2) > 1024
+                else msg1 + anime.description() + msg2
+            ),
+        ),
+        reply_markup=types.InlineKeyboardMarkup([buttons]),
+    )
 
 
 @Client.on_callback_query(filters.regex("MANGA"))
 async def getManga(client: Client, callback_query: CallbackQuery):
-    assert (isinstance(callback_query.data, str))
+    assert isinstance(callback_query.data, str)
     args = callback_query.data.split(":")
     manga = Manga(args[1])
     msg1 = f"""
@@ -103,12 +181,34 @@ async def getManga(client: Client, callback_query: CallbackQuery):
     msg2 = f"""
 **Tags:** {" ".join(["#"+tag.replace(" ","_").replace("-","_") for tag in manga.tags()])}
 """
-    await callback_query.message.edit_media(types.InputMediaPhoto(manga.coverImage("extraLarge"), (msg1 + manga.description()[:(1019-len(msg1)-len(msg2))]+"...\n"+msg2 if len(msg1+manga.description()+msg2) > 1024 else msg1+manga.description()+msg2)), reply_markup=types.InlineKeyboardMarkup([[types.InlineKeyboardButton("On Anilist", url=f"https://Anilist.co/manga/{manga.media[0]['id']}/")]]))
+    await callback_query.message.edit_media(
+        types.InputMediaPhoto(
+            manga.coverImage("extraLarge"),
+            (
+                msg1
+                + manga.description()[: (1019 - len(msg1) - len(msg2))]
+                + "...\n"
+                + msg2
+                if len(msg1 + manga.description() + msg2) > 1024
+                else msg1 + manga.description() + msg2
+            ),
+        ),
+        reply_markup=types.InlineKeyboardMarkup(
+            [
+                [
+                    types.InlineKeyboardButton(
+                        "On Anilist",
+                        url=f"https://Anilist.co/manga/{manga.media[0]['id']}/",
+                    ),
+                ],
+            ],
+        ),
+    )
 
 
 @Client.on_callback_query(filters.regex("CHR"))
 async def getCharacter(client: Client, callback_query: CallbackQuery):
-    assert (isinstance(callback_query.data, str))
+    assert isinstance(callback_query.data, str)
     args = callback_query.data.split(":")
     character = Character(args[1])
     caption = f"""
@@ -116,4 +216,19 @@ async def getCharacter(client: Client, callback_query: CallbackQuery):
 **Description:**
 {character.description()}
 """
-    await callback_query.message.edit_media(types.InputMediaPhoto(character.image("large"), (caption[:1021]+"..." if len(caption) > 1024 else caption)), reply_markup=types.InlineKeyboardMarkup([[types.InlineKeyboardButton("On Anilist", url=f"https://anilist.co/character/{character.media()['id']}/")]]))
+    await callback_query.message.edit_media(
+        types.InputMediaPhoto(
+            character.image("large"),
+            (caption[:1021] + "..." if len(caption) > 1024 else caption),
+        ),
+        reply_markup=types.InlineKeyboardMarkup(
+            [
+                [
+                    types.InlineKeyboardButton(
+                        "On Anilist",
+                        url=f"https://anilist.co/character/{character.media()['id']}/",
+                    ),
+                ],
+            ],
+        ),
+    )

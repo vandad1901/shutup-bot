@@ -1,14 +1,22 @@
+from __future__ import annotations
+
 import asyncio
-from functools import partial, wraps
+from collections.abc import Awaitable
+from collections.abc import Callable
+from collections.abc import Iterator
+from functools import partial
+from functools import wraps
 from itertools import repeat
 from math import ceil
 from os import environ
-from typing import Any, Awaitable, Callable, Iterator, TypeVar
+from typing import Any
+from typing import TypeVar
 
 import dotenv
 from pyrogram import filters
 from pyrogram.filters import Filter
-from pyrogram.types import Chat, User
+from pyrogram.types import Chat
+from pyrogram.types import User
 
 import DBManagement as DB
 
@@ -35,6 +43,7 @@ def async_wrap(func) -> Callable[..., Awaitable[Any]]:
             loop = asyncio.get_event_loop()
         pfunc = partial(func, *args, **kwargs)
         return await loop.run_in_executor(executor, pfunc)
+
     return run
 
 
@@ -49,19 +58,22 @@ def isModuleToggled(chatId: int, moduleName: str) -> bool:
 def isModuleToggledFilter(moduleName: str) -> Filter:
     def func(flt, _, query):
         return isModuleToggled(query.chat.id, flt.moduleName)
+
     return filters.create(func, moduleName=moduleName)
 
 
 T = TypeVar("T")
 
 
-def partitionGenerator(items: list[T], partitionTable: int | list[int]) -> Iterator[list[T]]:
-    if (isinstance(partitionTable, int)):
-        partitionTable = list(
-            repeat(partitionTable, ceil(len(items)/partitionTable)))
+def partitionGenerator(
+    items: list[T],
+    partitionTable: int | list[int],
+) -> Iterator[list[T]]:
+    if isinstance(partitionTable, int):
+        partitionTable = list(repeat(partitionTable, ceil(len(items) / partitionTable)))
     for i in range(len(partitionTable)):
         beginning = sum(partitionTable[:i])
-        yield items[beginning:beginning+partitionTable[i]]
+        yield items[beginning : beginning + partitionTable[i]]
 
 
 def partition(items: list[T], partitionTable: int | list[int]) -> list[list[T]]:
