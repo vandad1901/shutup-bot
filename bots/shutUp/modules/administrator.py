@@ -11,6 +11,7 @@ from __future__ import annotations
 
 from pyrogram import filters
 from pyrogram.client import Client
+from pyrogram.errors import exceptions
 from pyrogram.types import Message
 
 import DBManagement as DB
@@ -19,16 +20,21 @@ from common import owner_id
 
 
 @Client.on_message(filters.command(["setgifid", f"setgifid@{bot_username}"]))
-async def setGifId(client: Client, message: Message):
+async def setGifId(_: Client, message: Message):
     if message.from_user.id == owner_id:
-        try:
+        if message.reply_to_message:
             animationId = message.reply_to_message.animation.file_id
-        except:
+        elif len(message.command) == 2:
             animationId = message.command[1]
-        await message.reply_animation(
-            animation=animationId,
-            caption=f"The new animation id is: {animationId}",
-        )
+        try:
+            await message.reply_animation(
+                animation=animationId,
+                caption=f"The new animation id is: {animationId}",
+            )
+        except (exceptions.BadRequest, UnboundLocalError):
+            await message.reply_text("No valid animaion id found")
+            return
+
         DB.animations.add(animationId)
     else:
         await message.reply_text("No")
