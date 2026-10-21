@@ -1,0 +1,20 @@
+[project]
+name = "shutup-bot"
+version = "0.1.0"
+description = "A modular Telegram bot built on kurigram"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "anilistpy>=0.0.5.2,<0.1",  # abandoned; 0.1.0 on PyPI is a broken Rust sdist
+    "kurigram[fast]>=2.2.6",
+    "instaloader>=4.15.4",
+    "pillow>=13.0.0",
+    "pylast>=7.2.0",
+    "pymongo>=4.19.0",
+    "python-dotenv>=1.2.4",
+    "requests>=2.34.2",  # used by anilistpy, which doesn't declare it
+    "tgcrypto-pyrofork>=1.2.8",
+    "uvloop>=0.23.0; sys_platform != 'win32'",
+    "winloop>=0.8.0; sys_platform == 'win32'",
+    "yt-dlp>=2026.8.19",
+]
